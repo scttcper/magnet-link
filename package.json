@@ -1,0 +1,56 @@
+{
+  "name": "@ctrl/magnet-link",
+  "version": "0.0.0-placeholder",
+  "description": "Parse a magnet URI into js object",
+  "author": "Scott Cooper <scttcper@gmail.com>",
+  "license": "MIT",
+  "repository": "",
+  "keywords": [
+    "torrent",
+    "magnet",
+    "link",
+    "magnet-uri"
+  ],
+  "source": "src/index.ts",
+  "main": "./magnet-tr.js",
+  "module": "./magnet-tr.m.js",
+  "typings": "./src/index.d.ts",
+  "sideEffects": false,
+  "scripts": {
+    "lint": "tslint -t stylish -p .",
+    "lint:fix": "tslint -p tsconfig.json -t stylish --fix 'src/**/*.ts' 'test/**/*.ts'",
+    "prebuild": "rimraf dist",
+    "build": "microbundle build --target node --format cjs,es -o dist",
+    "postbuild": "cp package.json dist && cp LICENSE dist && cp README.md dist && rimraf dist/test",
+    "build:docs": "typedoc --out docs --target es6 --theme minimal --mode file src && touch docs/.nojekyll",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:ci": "jest --coverage --no-cache",
+    "semantic-release": "cd dist && semantic-release"
+  },
+  "dependencies": {
+    "@ctrl/ts-base32": "^1.0.4"
+  },
+  "devDependencies": {
+    "@types/jest": "23.3.11",
+    "@types/node": "10.12.18",
+    "@types/query-string": "6.2.0",
+    "jest": "23.6.0",
+    "microbundle": "0.9.0",
+    "prettier": "1.15.3",
+    "rimraf": "2.6.2",
+    "semantic-release": "15.13.2",
+    "ts-jest": "23.10.5",
+    "ts-node": "7.0.1",
+    "tslint": "5.12.0",
+    "tslint-config-prettier": "1.17.0",
+    "tslint-xo": "0.11.0",
+    "typescript": "3.2.2"
+  },
+  "release": {
+    "branch": "master"
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  }
+}
