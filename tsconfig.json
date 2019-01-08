@@ -6,6 +6,7 @@
     "target": "es2017",
     "module": "es2015",
     "esModuleInterop": true,
+    "downlevelIteration": true,
     "strict": true,
     "noImplicitAny": false,
     "noUnusedLocals": true,

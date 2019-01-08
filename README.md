@@ -1,6 +1,10 @@
 # magnet-link
 
-> Port of [webtorrent/magnet-uri](https://github.com/webtorrent/magnet-uri) by [feross](https://github.com/feross) that uses fewer dependencies in typescript
+> Parse a magnet URI into an object
+
+Port of [webtorrent/magnet-uri](https://github.com/webtorrent/magnet-uri) by [feross](https://github.com/feross) that uses fewer dependencies in typescript
+
+Demo: https://typectrl.github.io/ts-base32/  
 
 ### Install
 ```sh
