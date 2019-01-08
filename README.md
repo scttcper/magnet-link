@@ -1,6 +1,6 @@
 # magnet-link
 
-> Hard fork of [webtorrent/magnet-uri](https://github.com/webtorrent/magnet-uri) by [feross](https://github.com/feross) that uses fewer dependencies and written in typescript
+> Port of [webtorrent/magnet-uri](https://github.com/webtorrent/magnet-uri) by [feross](https://github.com/feross) that uses fewer dependencies in typescript
 
 ### Install
 ```sh
@@ -30,11 +30,8 @@ The entire parsed object
     "udp://tracker.example4.com:80",
     "udp://tracker.example5.com:80"
   ],
-
-  // added for convenience:
-  "infoHash": "d2474e86c95b19b8bcfdb92bc12c9d44667cfa36",
-  "infoHashBuffer": ...,
   "name": "Leaves of Grass by Walt Whitman.epub",
+  "infoHash": "d2474e86c95b19b8bcfdb92bc12c9d44667cfa36",
   "announce": [
     "udp://tracker.example1.com:1337",
     "udp://tracker.example2.com:80",

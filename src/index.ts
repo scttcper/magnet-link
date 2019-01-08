@@ -1,6 +1,6 @@
 import { base32Decode } from '@ctrl/ts-base32';
 
-export interface MagnetData extends Object {
+export interface MagnetData {
   /**
    * Is the info-hash hex encoded, for a total of 40 characters. For compatability with existing links in the wild, clients should also support the 32 character base32 encoded info-hash.
    *
@@ -14,10 +14,6 @@ export interface MagnetData extends Object {
    * parsed xt= parameter see xt
    */
   infoHash?: string;
-  /**
-   * buffer array of infoHash
-   */
-  infoHashBuffer?: Buffer;
   /**
    * the display name that may be used by the client to display while waiting for metadata
    */
@@ -136,9 +132,6 @@ export function magnetDecode(uri: string): MagnetData {
       }
     });
   }
-  if (result.infoHash) {
-    result.infoHashBuffer = Buffer.from(result.infoHash, 'hex');
-  }
 
   if (result.dn) {
     result.name = result.dn;
@@ -174,9 +167,6 @@ export function magnetEncode(data: MagnetData): string {
 
   // Support using convenience names, in addition to spec names
   // (example: `infoHash` for `xt`, `name` for `dn`)
-  if (obj.infoHashBuffer) {
-    obj.xt = `urn:btih:${obj.infoHashBuffer.toString('hex')}`;
-  }
   if (obj.infoHash) {
     obj.xt = `urn:btih:${obj.infoHash}`;
   }
