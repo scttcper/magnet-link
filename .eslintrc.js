@@ -3,6 +3,7 @@ module.exports = {
   env: {
     node: true,
     jest: true,
+    browser: true,
   },
   extends: ['xo-space/esnext', 'xo-typescript', 'prettier/@typescript-eslint'],
   rules: {

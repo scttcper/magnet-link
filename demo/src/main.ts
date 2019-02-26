@@ -1,4 +1,4 @@
-// tslint:disable-next-line:no-unused
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Buffer } from 'buffer';
 import { magnetDecode, magnetEncode } from '../../src';
 
@@ -16,6 +16,6 @@ function inputChange(str: string) {
 }
 
 function outputChange(str: string) {
-  input.value =  magnetEncode(JSON.parse(str));
+  input.value = magnetEncode(JSON.parse(str));
 }
 

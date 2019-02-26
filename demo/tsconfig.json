@@ -5,6 +5,7 @@
     "lib": ["es2017", "dom"],
     "module": "ES2015",
     "noUnusedLocals": false,
+    "downlevelIteration": true,
     "target": "es5",
     "strict": false
   },
