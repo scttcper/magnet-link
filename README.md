@@ -7,7 +7,7 @@ Port of [webtorrent/magnet-uri](https://github.com/webtorrent/magnet-uri) by [fe
 Demo: https://typectrl.github.io/magnet-link/  
 
 ### Install
-```sh
+```console
 npm install @ctrl/magnet-link
 ```
 
