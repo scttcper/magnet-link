@@ -15,6 +15,9 @@
   "module": "./module/index.js",
   "typings": "./index.d.ts",
   "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "demo": "npm-run-all --parallel start:demo watch:demo",
     "build:demo": "rollup -c rollup.demo.js",
