@@ -72,7 +72,6 @@ export function magnetDecode(uri: string): MagnetData {
 
   const params = data && data.length >= 0 ? data.split('&') : [];
 
-
   const result: any = {};
   params.forEach(param => {
     const keyval = param.split('=');
@@ -108,12 +107,14 @@ export function magnetDecode(uri: string): MagnetData {
 
     // If there are repeated parameters, return an array of values
     if (!result[key]) {
-      return result[key] = val;
-
+      result[key] = val;
+      return result;
     }
+
     if (Array.isArray(result[key])) {
       return result[key].push(val);
     }
+
     const old = result[key];
     result[key] = [old, val];
   });
@@ -121,7 +122,7 @@ export function magnetDecode(uri: string): MagnetData {
   if (result.xt) {
     let m;
     const xts = Array.isArray(result.xt) ? result.xt : [result.xt];
-    xts.forEach(xt => {
+    xts.forEach((xt: any) => {
       // tslint:disable-next-line:no-conditional-assignment
       if ((m = xt.match(/^urn:btih:(.{40})/))) {
         result.infoHash = m[1].toLowerCase();
@@ -136,6 +137,7 @@ export function magnetDecode(uri: string): MagnetData {
   if (result.dn) {
     result.name = result.dn;
   }
+
   if (result.kt) {
     result.keywords = result.kt;
   }
@@ -152,6 +154,7 @@ export function magnetDecode(uri: string): MagnetData {
   if (typeof result.as === 'string' || Array.isArray(result.as)) {
     result.urlList = result.urlList.concat(result.as);
   }
+
   if (typeof result.ws === 'string' || Array.isArray(result.ws)) {
     result.urlList = result.urlList.concat(result.ws);
   }
@@ -170,15 +173,19 @@ export function magnetEncode(data: MagnetData): string {
   if (obj.infoHash) {
     obj.xt = `urn:btih:${obj.infoHash}`;
   }
+
   if (obj.name) {
     obj.dn = obj.name;
   }
+
   if (obj.keywords) {
     obj.kt = obj.keywords;
   }
+
   if (obj.announce) {
     obj.tr = obj.announce;
   }
+
   if (obj.urlList) {
     obj.ws = obj.urlList;
     delete obj.as;
@@ -190,7 +197,7 @@ export function magnetEncode(data: MagnetData): string {
       let acc = prev;
 
       const values = Array.isArray(obj[key]) ? obj[key] : [obj[key]];
-      values.forEach((val, j) => {
+      values.forEach((val: any, j: any) => {
         if ((i > 0 || j > 0) && (key !== 'kt' || j === 0)) {
           acc = `${acc}&`;
         }
@@ -199,9 +206,11 @@ export function magnetEncode(data: MagnetData): string {
         if (key === 'dn') {
           res = encodeURIComponent(val).replace(/%20/g, '+');
         }
+
         if (key === 'tr' || key === 'xs' || key === 'as' || key === 'ws') {
           res = encodeURIComponent(val);
         }
+
         if (key === 'kt') {
           res = encodeURIComponent(val);
         }
