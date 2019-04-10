@@ -72,7 +72,7 @@ export function magnetDecode(uri: string): MagnetData {
 
   const params = data && data.length >= 0 ? data.split('&') : [];
 
-  const result: any = {};
+  const result: Partial<MagnetData> = {};
   params.forEach(param => {
     const keyval = param.split('=');
 
@@ -81,7 +81,7 @@ export function magnetDecode(uri: string): MagnetData {
       return;
     }
 
-    const key = keyval[0];
+    const key = keyval[0] as keyof MagnetData;
     let val: any = keyval[1];
 
     // Clean up torrent name
@@ -111,12 +111,12 @@ export function magnetDecode(uri: string): MagnetData {
       return result;
     }
 
-    if (Array.isArray(result[key])) {
-      return result[key].push(val);
+    const r = result[key];
+    if (r && Array.isArray(r)) {
+      return r.push(val);
     }
 
-    const old = result[key];
-    result[key] = [old, val];
+    result[key] = [r, val];
   });
 
   if (result.xt) {
@@ -159,10 +159,10 @@ export function magnetDecode(uri: string): MagnetData {
     result.urlList = result.urlList.concat(result.ws);
   }
 
-  result.announce = [...new Set(result.announce)].sort();
-  result.urlList = [...new Set(result.urlList)].sort();
+  result.announce = [...new Set(result.announce)].sort((a, b) => a.localeCompare(b));
+  result.urlList = [...new Set(result.urlList)].sort((a, b) => a.localeCompare(b));
 
-  return result;
+  return result as MagnetData;
 }
 
 export function magnetEncode(data: MagnetData): string {
