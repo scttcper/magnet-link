@@ -28,7 +28,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:ci": "jest --coverage --no-cache",
-    "semantic-release": "cd dist && semantic-release"
+    "semantic-release": "semantic-release"
   },
   "dependencies": {
     "@ctrl/ts-base32": "^1.1.2"
