@@ -3,6 +3,8 @@ import typescript from 'rollup-plugin-typescript2';
 import globals from 'rollup-plugin-node-globals';
 import builtins from 'rollup-plugin-node-builtins';
 import resolve from 'rollup-plugin-node-resolve';
+import serve from 'rollup-plugin-serve';
+import livereload from 'rollup-plugin-livereload';
 
 // `npm run build` -> `production` is true
 // `npm run dev` -> `production` is false
@@ -23,5 +25,7 @@ export default {
     }),
     resolve(),
     production && terser(), // minify, but only in production
+    !production && serve('demo/public'),
+    !production && livereload(),
   ],
 };

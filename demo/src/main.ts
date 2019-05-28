@@ -2,6 +2,9 @@
 import { Buffer } from 'buffer';
 import { magnetDecode, magnetEncode } from '../../src';
 
+// this keeps buffer import from being removed
+Buffer.from('');
+
 (window as any).magnetDecode = magnetDecode;
 (window as any).magnetEncode = magnetEncode;
 
