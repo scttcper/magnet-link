@@ -82,41 +82,25 @@ export function magnetDecode(uri: string): MagnetData {
     }
 
     const key = keyval[0] as keyof MagnetData;
-    let val: any = keyval[1];
+    const val = parseQueryParamValue(key, keyval[1]);
 
-    // Clean up torrent name
-    if (key === 'dn') {
-      val = decodeURIComponent(val).replace(/\+/g, ' ');
-    }
-
-    // Address tracker (tr), exact source (xs), and acceptable source (as) are encoded
-    // URIs, so decode them
-    if (key === 'tr' || key === 'xs' || key === 'as' || key === 'ws') {
-      val = decodeURIComponent(val);
-    }
-
-    // Return keywords as an array
-    if (key === 'kt') {
-      val = decodeURIComponent(val).split('+');
-    }
-
-    // Cast file index (ix) to a number
-    if (key === 'ix') {
-      val = Number(val);
-    }
-
-    // If there are repeated parameters, return an array of values
-    if (!result[key]) {
-      result[key] = val;
-      return result;
+    if (val === undefined) {
+      return;
     }
 
     const r = result[key];
-    if (r && Array.isArray(r)) {
-      return r.push(val);
+
+    if (!r) {
+      result[key] = val as any;
+      return result;
     }
 
-    result[key] = [r, val];
+    // If there are repeated parameters, return an array of values
+    if (r && Array.isArray(r)) {
+      return r.push(val as any);
+    }
+
+    result[key] = [r, val] as any;
   });
 
   if (result.xt) {
@@ -163,6 +147,34 @@ export function magnetDecode(uri: string): MagnetData {
   result.urlList = [...new Set(result.urlList)].sort((a, b) => a.localeCompare(b));
 
   return result as MagnetData;
+}
+
+/**
+ * specific query parameters have expected formats, this attempts to parse them in the correct way
+ */
+function parseQueryParamValue(key: string, val: string) {
+  // Clean up torrent name
+  if (key === 'dn') {
+    return decodeURIComponent(val).replace(/\+/g, ' ');
+  }
+
+  // Address tracker (tr), exact source (xs), and acceptable source (as) are encoded
+  // URIs, so decode them
+  if (key === 'tr' || key === 'xs' || key === 'as' || key === 'ws') {
+    return decodeURIComponent(val);
+  }
+
+  // Return keywords as an array
+  if (key === 'kt') {
+    return decodeURIComponent(val).split('+');
+  }
+
+  // Cast file index (ix) to a number
+  if (key === 'ix') {
+    return Number(val);
+  }
+
+  return val;
 }
 
 export function magnetEncode(data: MagnetData): string {
