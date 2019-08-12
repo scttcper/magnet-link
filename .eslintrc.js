@@ -12,5 +12,6 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 0,
     'capitalized-comments': 0,
     'comma-dangle': ['error', 'always-multiline'],
+    '@typescript-eslint/no-explicit-any': 0,
   },
 };
