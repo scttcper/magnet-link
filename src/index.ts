@@ -97,7 +97,7 @@ export function magnetDecode(uri: string): MagnetData {
 
     // If there are repeated parameters, return an array of values
     if (r && Array.isArray(r)) {
-      return r.push(val as any);
+      return (r as any[]).push(val);
     }
 
     result[key] = [r, val] as any;
