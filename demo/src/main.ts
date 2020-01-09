@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Buffer } from 'buffer';
 import { magnetDecode, magnetEncode } from '../../src';
 
@@ -14,11 +13,11 @@ const output = document.querySelector<HTMLInputElement>('#output');
 input.addEventListener('input', event => inputChange((event.target as HTMLInputElement).value));
 output.addEventListener('input', event => outputChange((event.target as HTMLInputElement).value));
 
-function inputChange(str: string) {
+function inputChange(str: string): void {
   output.value = JSON.stringify(magnetDecode(str), null, 4);
 }
 
-function outputChange(str: string) {
+function outputChange(str: string): void {
   input.value = magnetEncode(JSON.parse(str));
 }
 

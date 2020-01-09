@@ -4,5 +4,6 @@
     "module": "esnext",
     "declaration": false,
     "outDir": "dist/module"
-  }
+  },
+  "include": ["src/index.ts"]
 }

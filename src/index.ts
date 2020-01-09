@@ -152,7 +152,7 @@ export function magnetDecode(uri: string): MagnetData {
 /**
  * specific query parameters have expected formats, this attempts to parse them in the correct way
  */
-function parseQueryParamValue(key: string, val: string) {
+function parseQueryParamValue(key: string, val: string): string | number | string[] {
   // Clean up torrent name
   if (key === 'dn') {
     return decodeURIComponent(val).replace(/\+/g, ' ');
@@ -183,7 +183,7 @@ export function magnetEncode(data: MagnetData): string {
   // Support using convenience names, in addition to spec names
   // (example: `infoHash` for `xt`, `name` for `dn`)
   if (obj.infoHash) {
-    obj.xt = `urn:btih:${obj.infoHash}`;
+    obj.xt = `urn:btih:${obj.infoHash as string}`;
   }
 
   if (obj.name) {
@@ -214,7 +214,7 @@ export function magnetEncode(data: MagnetData): string {
           acc = `${acc}&`;
         }
 
-        let res = val;
+        let res: string = val;
         if (key === 'dn') {
           res = encodeURIComponent(val).replace(/%20/g, '+');
         }
