@@ -37,7 +37,7 @@
     "@ctrl/ts-base32": "^1.1.4"
   },
   "devDependencies": {
-    "@types/jest": "24.0.25",
+    "@types/jest": "24.9.1",
     "@types/node": "13.1.6",
     "@typescript-eslint/eslint-plugin": "2.15.0",
     "@typescript-eslint/parser": "2.15.0",
