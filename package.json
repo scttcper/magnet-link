@@ -46,7 +46,7 @@
     "eslint-config-xo-space": "0.24.0",
     "eslint-config-xo-typescript": "0.26.0",
     "eslint-plugin-import": "2.20.2",
-    "jest": "25.1.0",
+    "jest": "25.2.4",
     "rollup": "2.0.2",
     "rollup-plugin-livereload": "1.0.4",
     "rollup-plugin-node-builtins": "2.1.2",
