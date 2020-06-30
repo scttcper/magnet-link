@@ -4,7 +4,7 @@
 
 Port of [webtorrent/magnet-uri](https://github.com/webtorrent/magnet-uri) by [feross](https://github.com/feross) that uses fewer dependencies in typescript
 
-__Demo__: https://ctrl-magnet-link.netlify.com/  
+__Demo__: https://magnet-link.vercel.app  
 
 ### Install
 ```console

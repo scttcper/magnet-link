@@ -3,6 +3,7 @@
   "version": "0.0.0-placeholder",
   "description": "Parse a magnet URI into an object",
   "author": "Scott Cooper <scttcper@gmail.com>",
+  "homepage": "https://magnet-link.vercel.app",
   "license": "MIT",
   "repository": "TypeCtrl/magnet-link",
   "keywords": [
