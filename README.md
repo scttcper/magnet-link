@@ -1,4 +1,4 @@
-# magnet-link [![npm](https://img.shields.io/npm/v/@ctrl/magnet-link.svg?maxAge=3600)](https://www.npmjs.com/package/@ctrl/magnet-link) [![CircleCI](https://circleci.com/gh/TypeCtrl/magnet-link.svg?style=svg)](https://circleci.com/gh/TypeCtrl/magnet-link) [![coverage status](https://codecov.io/gh/typectrl/magnet-link/branch/master/graph/badge.svg)](https://codecov.io/gh/typectrl/magnet-link)
+# magnet-link [![npm](https://badgen.net/npm/v/@ctrl/magnet-link)](https://www.npmjs.com/package/@ctrl/magnet-link) [![CircleCI](https://badgen.net/github/status/typectrl/magnet-link)](https://circleci.com/gh/TypeCtrl/magnet-link) [![coverage status](https://badgen.net/codecov/c/github/typectrl/magnet-link)](https://codecov.io/gh/typectrl/magnet-link)
 
 > Parse a magnet URI into an object
 
