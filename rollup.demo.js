@@ -14,7 +14,7 @@ export default {
   input: './demo/src/main.ts',
   output: {
     file: './demo/public/bundle.js',
-    format: 'iife', // immediately-invoked function expression — suitable for <script> tags
+    format: 'iife', // Immediately-invoked function expression — suitable for <script> tags
     sourcemap: true,
   },
   plugins: [
@@ -24,7 +24,7 @@ export default {
       tsconfig: './demo/tsconfig.json',
     }),
     resolve(),
-    production && terser(), // minify, but only in production
+    production && terser(), // Minify, but only in production
     !production && serve('demo/public'),
     !production && livereload(),
   ],

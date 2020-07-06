@@ -1,3 +1,5 @@
+import { it, describe, expect, test } from '@jest/globals';
+
 import { magnetEncode, magnetDecode, MagnetData } from '../src/index';
 
 const leavesOfGrass =

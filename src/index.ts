@@ -11,35 +11,35 @@ export interface MagnetData {
    */
   xt: string | string[];
   /**
-   * parsed xt= parameter see xt
+   * Parsed xt= parameter see xt
    */
   infoHash?: string;
   /**
-   * the display name that may be used by the client to display while waiting for metadata
+   * The display name that may be used by the client to display while waiting for metadata
    */
   name?: string | string[];
   /**
-   * the display name that may be used by the client to display while waiting for metadata
+   * The display name that may be used by the client to display while waiting for metadata
    */
   dn?: string | string[];
   /**
-   * tracker url, if there is one. If there are multiple trackers, multiple tr entries may be included
+   * Tracker url, if there is one. If there are multiple trackers, multiple tr entries may be included
    */
   tr?: string | string[];
   /**
-   * tracker url, if there is one. If there are multiple trackers, multiple tr entries may be included
+   * Tracker url, if there is one. If there are multiple trackers, multiple tr entries may be included
    */
   announce?: string[];
   /**
-   * an array of where the actual torrent file can be downloaded
+   * An array of where the actual torrent file can be downloaded
    */
   xs?: string | string[];
   /**
-   * an array of where the actual torrent file can be downloaded
+   * An array of where the actual torrent file can be downloaded
    */
   as?: string | string[];
   /**
-   * an array of where the actual torrent file can be downloaded
+   * An array of where the actual torrent file can be downloaded
    */
   ws?: string | string[];
   /**
@@ -51,15 +51,15 @@ export interface MagnetData {
    */
   keywords?: string | string[];
   /**
-   * file index
+   * File index
    */
   ix?: number | number[];
   /**
-   * size in bytes
+   * Size in bytes
    */
   xl?: string;
   /**
-   * combined as= and ws= parameters if they exist
+   * Combined as= and ws= parameters if they exist
    */
   urlList?: string[];
 }
@@ -67,7 +67,7 @@ export interface MagnetData {
 const start = 'magnet:?';
 
 export function magnetDecode(uri: string): MagnetData {
-  // support 'stream-magnet:' as well
+  // Support 'stream-magnet:' as well
   const data = uri.substr(uri.indexOf(start) + start.length);
 
   const params = data && data.length >= 0 ? data.split('&') : [];
@@ -107,10 +107,8 @@ export function magnetDecode(uri: string): MagnetData {
     let m;
     const xts = Array.isArray(result.xt) ? result.xt : [result.xt];
     xts.forEach((xt: any) => {
-      // tslint:disable-next-line:no-conditional-assignment
       if ((m = xt.match(/^urn:btih:(.{40})/))) {
         result.infoHash = m[1].toLowerCase();
-        // tslint:disable-next-line:no-conditional-assignment
       } else if ((m = xt.match(/^urn:btih:(.{32})/))) {
         const decodedStr = base32Decode(m[1]);
         result.infoHash = Buffer.from(decodedStr).toString('hex');
@@ -150,7 +148,7 @@ export function magnetDecode(uri: string): MagnetData {
 }
 
 /**
- * specific query parameters have expected formats, this attempts to parse them in the correct way
+ * Specific query parameters have expected formats, this attempts to parse them in the correct way
  */
 function parseQueryParamValue(key: string, val: string): string | number | string[] {
   // Clean up torrent name
@@ -178,7 +176,7 @@ function parseQueryParamValue(key: string, val: string): string | number | strin
 }
 
 export function magnetEncode(data: MagnetData): string {
-  const obj: any = { ...data }; // shallow clone object
+  const obj: any = { ...data }; // Shallow clone object
 
   // Support using convenience names, in addition to spec names
   // (example: `infoHash` for `xt`, `name` for `dn`)
