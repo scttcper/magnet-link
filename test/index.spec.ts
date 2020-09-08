@@ -140,6 +140,18 @@ describe('Decode', () => {
     expect(typeof result.ix).toBe('number');
     expect(result.ix).toBe(1);
   });
+
+  it('should decode bittorrent v2 magnet links', () => {
+    const result = magnetDecode('magnet:?xt=urn:btmh:1220caf1e1c30e81cb361b9ee167c4aa64228a7fa4fa9f6105232b28ad099f3a302e&dn=bittorrent-v2-test');
+    expect(result.xt).toBe('urn:btmh:1220caf1e1c30e81cb361b9ee167c4aa64228a7fa4fa9f6105232b28ad099f3a302e');
+  });
+
+  it('should decode hybrid bittorent v2 magnet links', () => {
+    // https://blog.libtorrent.org/2020/09/bittorrent-v2/
+    const result = magnetDecode('magnet:?xt=urn:btih:631a31dd0a46257d5078c0dee4e66e26f73e42ac&xt=urn:btmh:1220d8dd32ac93357c368556af3ac1d95c9d76bd0dff6fa9833ecdac3d53134efabb&dn=bittorrent-v1-v2-hybrid-test');
+    expect(result.xt).toEqual(['urn:btih:631a31dd0a46257d5078c0dee4e66e26f73e42ac', 'urn:btmh:1220d8dd32ac93357c368556af3ac1d95c9d76bd0dff6fa9833ecdac3d53134efabb']);
+    expect(result.dn).toBe('bittorrent-v1-v2-hybrid-test');
+  });
 });
 
 describe('Encode', () => {
@@ -147,6 +159,7 @@ describe('Encode', () => {
     expect(
       magnetEncode({
         xt: [
+          'urn:btmh:1220caf1e1c30e81cb361b9ee167c4aa64228a7fa4fa9f6105232b28ad099f3a302e',
           'urn:ed2k:354B15E68FB8F36D7CD88FF94116CDC1',
           'urn:tree:tiger:7N5OAMRNGMSSEUE3ORHOKWN4WWIQ5X4EBOOTLJY',
           'urn:btih:QHQXPYWMACKDWKP47RRVIV7VOURXFE5Q',
@@ -158,7 +171,7 @@ describe('Encode', () => {
         xs: ['http://cache.example.org/XRX2PEFXOOEJFRVUCX6HMZMKS5TWG4K5', 'dchub://example.org'],
       }),
     ).toBe(
-      'magnet:?xt=urn:ed2k:354B15E68FB8F36D7CD88FF94116CDC1&xt=urn:tree:tiger:7N5OAMRNGMSSEUE3ORHOKWN4WWIQ5X4EBOOTLJY&xt=urn:btih:QHQXPYWMACKDWKP47RRVIV7VOURXFE5Q&xl=10826029&dn=mediawiki-1.15.1.tar.gz&tr=udp%3A%2F%2Ftracker.example4.com%3A80%2Fannounce&as=http%3A%2F%2Fdownload.wikimedia.org%2Fmediawiki%2F1.15%2Fmediawiki-1.15.1.tar.gz&xs=http%3A%2F%2Fcache.example.org%2FXRX2PEFXOOEJFRVUCX6HMZMKS5TWG4K5&xs=dchub%3A%2F%2Fexample.org',
+      'magnet:?xt=urn:btmh:1220caf1e1c30e81cb361b9ee167c4aa64228a7fa4fa9f6105232b28ad099f3a302e&xt=urn:ed2k:354B15E68FB8F36D7CD88FF94116CDC1&xt=urn:tree:tiger:7N5OAMRNGMSSEUE3ORHOKWN4WWIQ5X4EBOOTLJY&xt=urn:btih:QHQXPYWMACKDWKP47RRVIV7VOURXFE5Q&xl=10826029&dn=mediawiki-1.15.1.tar.gz&tr=udp%3A%2F%2Ftracker.example4.com%3A80%2Fannounce&as=http%3A%2F%2Fdownload.wikimedia.org%2Fmediawiki%2F1.15%2Fmediawiki-1.15.1.tar.gz&xs=http%3A%2F%2Fcache.example.org%2FXRX2PEFXOOEJFRVUCX6HMZMKS5TWG4K5&xs=dchub%3A%2F%2Fexample.org',
     );
   });
   it('should encode simple magnet uri using convenience names', () => {
