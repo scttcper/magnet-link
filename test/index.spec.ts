@@ -142,14 +142,23 @@ describe('Decode', () => {
   });
 
   it('should decode bittorrent v2 magnet links', () => {
-    const result = magnetDecode('magnet:?xt=urn:btmh:1220caf1e1c30e81cb361b9ee167c4aa64228a7fa4fa9f6105232b28ad099f3a302e&dn=bittorrent-v2-test');
-    expect(result.xt).toBe('urn:btmh:1220caf1e1c30e81cb361b9ee167c4aa64228a7fa4fa9f6105232b28ad099f3a302e');
+    const result = magnetDecode(
+      'magnet:?xt=urn:btmh:1220caf1e1c30e81cb361b9ee167c4aa64228a7fa4fa9f6105232b28ad099f3a302e&dn=bittorrent-v2-test',
+    );
+    expect(result.xt).toBe(
+      'urn:btmh:1220caf1e1c30e81cb361b9ee167c4aa64228a7fa4fa9f6105232b28ad099f3a302e',
+    );
   });
 
   it('should decode hybrid bittorent v2 magnet links', () => {
     // https://blog.libtorrent.org/2020/09/bittorrent-v2/
-    const result = magnetDecode('magnet:?xt=urn:btih:631a31dd0a46257d5078c0dee4e66e26f73e42ac&xt=urn:btmh:1220d8dd32ac93357c368556af3ac1d95c9d76bd0dff6fa9833ecdac3d53134efabb&dn=bittorrent-v1-v2-hybrid-test');
-    expect(result.xt).toEqual(['urn:btih:631a31dd0a46257d5078c0dee4e66e26f73e42ac', 'urn:btmh:1220d8dd32ac93357c368556af3ac1d95c9d76bd0dff6fa9833ecdac3d53134efabb']);
+    const result = magnetDecode(
+      'magnet:?xt=urn:btih:631a31dd0a46257d5078c0dee4e66e26f73e42ac&xt=urn:btmh:1220d8dd32ac93357c368556af3ac1d95c9d76bd0dff6fa9833ecdac3d53134efabb&dn=bittorrent-v1-v2-hybrid-test',
+    );
+    expect(result.xt).toEqual([
+      'urn:btih:631a31dd0a46257d5078c0dee4e66e26f73e42ac',
+      'urn:btmh:1220d8dd32ac93357c368556af3ac1d95c9d76bd0dff6fa9833ecdac3d53134efabb',
+    ]);
     expect(result.dn).toBe('bittorrent-v1-v2-hybrid-test');
   });
 });

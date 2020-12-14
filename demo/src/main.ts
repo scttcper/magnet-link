@@ -20,4 +20,3 @@ function inputChange(str: string): void {
 function outputChange(str: string): void {
   input.value = magnetEncode(JSON.parse(str));
 }
-
