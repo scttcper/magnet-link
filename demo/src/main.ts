@@ -1,4 +1,5 @@
 import { Buffer } from 'buffer';
+
 import { magnetDecode, magnetEncode } from '../../src';
 
 // This keeps buffer import from being removed
