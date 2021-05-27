@@ -37,24 +37,24 @@
     "@ctrl/ts-base32": "^1.2.6"
   },
   "devDependencies": {
-    "@babel/core": "7.13.16",
-    "@babel/preset-env": "7.13.15",
+    "@babel/core": "7.14.3",
+    "@babel/preset-env": "7.14.2",
     "@babel/preset-typescript": "7.13.0",
-    "@ctrl/eslint-config": "2.0.4",
-    "@jest/globals": "27.0.0-next.8",
-    "@rollup/plugin-node-resolve": "11.2.1",
-    "@types/node": "14.14.41",
-    "babel-jest": "27.0.0-next.8",
+    "@ctrl/eslint-config": "2.0.6",
+    "@jest/globals": "27.0.1",
+    "@rollup/plugin-node-resolve": "13.0.0",
+    "@types/node": "15.6.1",
+    "babel-jest": "27.0.1",
     "buffer": "6.0.3",
-    "jest": "27.0.0-next.8",
-    "rollup": "2.45.2",
+    "jest": "27.0.1",
+    "rollup": "2.50.1",
     "rollup-plugin-livereload": "2.0.0",
     "rollup-plugin-node-builtins": "2.1.2",
     "rollup-plugin-node-globals": "1.4.0",
     "rollup-plugin-serve": "1.1.0",
     "rollup-plugin-terser": "7.0.2",
     "rollup-plugin-typescript2": "0.30.0",
-    "typescript": "4.2.4"
+    "typescript": "4.3.2"
   },
   "release": {
     "branch": "master"
@@ -77,8 +77,5 @@
   },
   "engines": {
     "node": ">=10.19.0"
-  },
-  "volta": {
-    "node": "16.0.0"
   }
 }
