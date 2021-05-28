@@ -37,3 +37,5 @@ dist
 demo/public/*.js
 demo/public/*.js.map
 yarn.lock
+**.js
+**.d.ts

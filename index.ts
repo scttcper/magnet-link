@@ -82,7 +82,7 @@ export function magnetDecode(uri: string): MagnetData {
     }
 
     const key = keyval[0] as keyof MagnetData;
-    const val = parseQueryParamValue(key, keyval[1]);
+    const val = parseQueryParamValue(key, keyval[1]!);
 
     if (val === undefined) {
       return;
@@ -92,12 +92,13 @@ export function magnetDecode(uri: string): MagnetData {
 
     if (!r) {
       result[key] = val as any;
-      return result;
+      return;
     }
 
     // If there are repeated parameters, return an array of values
     if (r && Array.isArray(r)) {
-      return (r as any[]).push(val);
+      (r as any[]).push(val);
+      return;
     }
 
     result[key] = [r, val] as any;

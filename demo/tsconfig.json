@@ -2,11 +2,9 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "declaration": false,
-    "lib": ["es2017", "dom"],
-    "module": "ES2015",
+    "lib": ["ES2020", "dom"],
     "noUnusedLocals": false,
     "downlevelIteration": true,
-    "target": "es5",
     "strict": false
   },
   "files": ["./src/main.ts"],
