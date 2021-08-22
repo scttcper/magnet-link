@@ -102,6 +102,8 @@ export function magnetDecode(uri: string): MagnetData {
     }
 
     result[key] = [r, val] as any;
+    // eslint-disable-next-line no-useless-return
+    return;
   });
 
   if (result.xt) {
