@@ -28,7 +28,7 @@
     "build": "tsc",
     "test": "NODE_OPTIONS=\"--loader ts-node/esm\" uvu test",
     "test:watch": "NODE_OPTIONS=\"--loader ts-node/esm\" watchlist src test -- uvu test",
-    "test:ci": "NODE_OPTIONS=\"--loader ts-node/esm\" c8 --reporter=text --reporter=lcov uvu test"
+    "test:ci": "NODE_OPTIONS=\"--loader ts-node/esm\" c8 --reporter=text uvu test"
   },
   "dependencies": {
     "@ctrl/ts-base32": "^2.1.1"
