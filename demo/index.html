@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite App</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <div class="bg-white mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="max-w-2xl mx-auto">
+        <div class="text-base max-w-prose">
+          <h1 class="leading-1 text-5xl text-gray-800 font-semibold">magnet-link</h1>
+          <p class="mt-2 text-xl text-gray-900">Parse a magnet URI into an object</p>
+        </div>
+        <div class="mt-4 mb-6 flex text-base max-w-prose">
+          <div class="rounded-md shadow">
+            <a
+              href="https://github.com/scttcper/magnet-link#readme"
+              class="
+                w-full
+                flex
+                items-center
+                justify-center
+                px-3
+                py-1
+                border border-transparent
+                text-base
+                font-medium
+                rounded-md
+                text-white
+                bg-blue-600
+                hover:bg-blue-700
+              "
+            >
+              GitHub Readme
+            </a>
+          </div>
+        </div>
+        <div class="max-w-prose mb-6">
+          <h3 class="text-xl font-semibold leading-5 mb-4">Install</h3>
+          <pre
+            class="rounded bg-gray-100 py-3 px-4 text-black text-sm"
+          ><code>npm install @ctrl/magnet-link</code></pre>
+        </div>
+
+        <div class="max-w-prose mb-6">
+          <h3 class="text-xl font-semibold leading-5 mb-4">Demo</h3>
+          <section>
+            <label for="input" class="mb-3">Input string:</label>
+            <textarea
+              id="input"
+              type="text"
+              style="width: 100%"
+              rows="4"
+              placeholder="magnet link"
+              class="
+                shadow-sm
+                block
+                w-full
+                focus:ring-blue-500 focus:border-blue-500
+                sm:text-sm
+                border border-gray-300
+                rounded-md
+                mb-3
+              "
+            ></textarea>
+            <label for="output" class="mb-3">Output:</label>
+            <textarea
+              id="output"
+              type="text"
+              style="width: 100%; height: 400px"
+              readonly
+              class="
+                shadow-sm
+                block
+                w-full
+                focus:ring-blue-500 focus:border-blue-500
+                sm:text-sm
+                border border-gray-300
+                rounded-md
+              "
+            ></textarea>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
