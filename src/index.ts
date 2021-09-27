@@ -9,7 +9,7 @@ export interface MagnetData {
    * Is the multihash formatted, hex encoded full infohash for torrents in the new metadata format. 'btmh' and 'btih' exact topics may exist in the same magnet if they describe the same hybrid torrent.
    * @link http://www.bittorrent.org/beps/bep_0009.html
    */
-  xt: string | string[];
+  xt?: string | string[];
   /**
    * Parsed xt= parameter see xt
    */

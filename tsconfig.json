@@ -3,7 +3,6 @@
   "compilerOptions": {
     "lib": ["ES2020", "DOM"],
     "outDir": "dist",
-    "esModuleInterop": true,
     "noImplicitReturns": false
   },
   "ts-node": {
