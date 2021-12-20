@@ -9,7 +9,7 @@ export interface MagnetData {
    * Is the multihash formatted, hex encoded full infohash for torrents in the new metadata format. 'btmh' and 'btih' exact topics may exist in the same magnet if they describe the same hybrid torrent.
    * @link http://www.bittorrent.org/beps/bep_0009.html
    */
-  xt: string | string[];
+  xt?: string | string[];
   /**
    * Parsed xt= parameter see xt
    */
@@ -82,7 +82,7 @@ export function magnetDecode(uri: string): MagnetData {
     }
 
     const key = keyval[0] as keyof MagnetData;
-    const val = parseQueryParamValue(key, keyval[1]);
+    const val = parseQueryParamValue(key, keyval[1]!);
 
     if (val === undefined) {
       return;
@@ -97,10 +97,13 @@ export function magnetDecode(uri: string): MagnetData {
 
     // If there are repeated parameters, return an array of values
     if (r && Array.isArray(r)) {
-      return (r as any[]).push(val);
+      (r as any[]).push(val);
+      return;
     }
 
     result[key] = [r, val] as any;
+    // eslint-disable-next-line no-useless-return
+    return;
   });
 
   if (result.xt) {

@@ -12,70 +12,58 @@
     "link",
     "magnet-uri"
   ],
-  "main": "dist/index.js",
-  "module": "dist/module/index.js",
-  "typings": "dist/index.d.ts",
+  "type": "module",
+  "exports": "./dist/src/index.js",
+  "types": "./dist/src/index.d.ts",
   "files": [
-    "dist"
+    "dist/src"
   ],
   "sideEffects": false,
-  "publishConfig": {
-    "access": "public"
-  },
   "scripts": {
-    "build:demo": "rollup -c rollup.demo.js",
-    "watch:demo": "rollup -c rollup.demo.js -w",
-    "lint": "eslint --ext .js,.ts, .",
-    "lint:fix": "eslint --fix --ext .js,.ts, .",
+    "demo:build": "npm run build --workspace=demo",
+    "demo:watch": "npm run dev --workspace=demo",
+    "lint": "eslint --ext .ts .",
+    "lint:fix": "eslint --fix --ext .ts .",
     "prepare": "npm run build",
-    "build": "tsc -p tsconfig.build.json && tsc -p tsconfig.module.json",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:ci": "jest --coverage --no-cache"
+    "build": "tsc",
+    "test": "ava",
+    "test:watch": "ava --watch",
+    "test:ci": "c8 --reporter=text --reporter=lcov ava"
   },
   "dependencies": {
-    "@ctrl/ts-base32": "^1.2.6"
+    "@ctrl/ts-base32": "^2.1.1"
   },
   "devDependencies": {
-    "@babel/core": "7.14.3",
-    "@babel/preset-env": "7.14.2",
-    "@babel/preset-typescript": "7.13.0",
-    "@ctrl/eslint-config": "2.0.6",
-    "@jest/globals": "27.0.1",
-    "@rollup/plugin-node-resolve": "13.0.0",
-    "@types/node": "15.6.1",
-    "babel-jest": "27.0.1",
+    "@ctrl/eslint-config": "3.2.0",
+    "@sindresorhus/tsconfig": "2.0.0",
+    "@types/node": "17.0.1",
+    "ava": "4.0.0-rc.1",
     "buffer": "6.0.3",
-    "jest": "27.0.1",
-    "rollup": "2.50.1",
-    "rollup-plugin-livereload": "2.0.0",
-    "rollup-plugin-node-builtins": "2.1.2",
-    "rollup-plugin-node-globals": "1.4.0",
-    "rollup-plugin-serve": "1.1.0",
-    "rollup-plugin-terser": "7.0.2",
-    "rollup-plugin-typescript2": "0.30.0",
-    "typescript": "4.3.2"
+    "c8": "7.10.0",
+    "tsm": "2.2.1",
+    "typescript": "4.5.4"
+  },
+  "ava": {
+    "files": [
+      "test/**/*.spec.ts"
+    ],
+    "extensions": {
+      "ts": "module"
+    },
+    "nodeArguments": [
+      "--loader=tsm"
+    ]
+  },
+  "workspaces": [
+    "demo"
+  ],
+  "publishConfig": {
+    "access": "public"
   },
   "release": {
     "branch": "master"
   },
-  "jest": {
-    "coverageProvider": "v8"
-  },
-  "babel": {
-    "presets": [
-      [
-        "@babel/preset-env",
-        {
-          "targets": {
-            "node": "current"
-          }
-        }
-      ],
-      "@babel/preset-typescript"
-    ]
-  },
   "engines": {
-    "node": ">=10.19.0"
+    "node": ">=14.16"
   }
 }

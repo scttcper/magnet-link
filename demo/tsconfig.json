@@ -1,14 +1,17 @@
 {
-  "extends": "../tsconfig.json",
   "compilerOptions": {
-    "declaration": false,
-    "lib": ["es2017", "dom"],
-    "module": "ES2015",
-    "noUnusedLocals": false,
-    "downlevelIteration": true,
-    "target": "es5",
-    "strict": false
+    "target": "ESNext",
+    "module": "ESNext",
+    "lib": ["ESNext", "DOM"],
+    "moduleResolution": "Node",
+    "strict": true,
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "noEmit": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true
   },
-  "files": ["./src/main.ts"],
-  "include": ["./**/*.ts"]
+  "include": ["./src"]
 }
