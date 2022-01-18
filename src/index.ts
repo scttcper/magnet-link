@@ -191,7 +191,7 @@ export function magnetDecode(uri: string): MagnetData {
   result.urlList = [...new Set(result.urlList)].sort((a, b) => a.localeCompare(b));
   result.peerAddresses = [...new Set(result.peerAddresses)];
 
-  return result as MagnetData;
+  return result;
 }
 
 /**
