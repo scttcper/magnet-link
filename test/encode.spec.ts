@@ -27,7 +27,9 @@ test('should encode simple magnet uri using convenience names', t => {
     xt: 'urn:btih:d2474e86c95b19b8bcfdb92bc12c9d44667cfa36',
     dn: 'Leaves of Grass by Walt Whitman.epub',
     name: 'Leaves of Grass by Walt Whitman.epub',
+    peerAddresses: [],
     infoHash: 'd2474e86c95b19b8bcfdb92bc12c9d44667cfa36',
+    infoHashBuffer: Buffer.from('d2474e86c95b19b8bcfdb92bc12c9d44667cfa36', 'hex'),
     tr: [
       'udp://tracker.example1.com:1337',
       'udp://tracker.example2.com:80',
@@ -56,4 +58,118 @@ test('should encode simple magnet uri using convenience names', t => {
   );
 
   t.deepEqual(magnetDecode(result), obj);
+});
+
+// Peer address expressed as hostname:port (BEP09) http://bittorrent.org/beps/bep_0009.html
+test('encode: peer-address single value', t => {
+  const obj = {
+    xt: 'urn:btih:d2474e86c95b19b8bcfdb92bc12c9d44667cfa36',
+    'x.pe': '123.213.32.10:47450',
+  };
+  const result = magnetEncode(obj);
+  t.is(
+    result,
+    'magnet:?xt=urn:btih:d2474e86c95b19b8bcfdb92bc12c9d44667cfa36&x.pe=123.213.32.10:47450',
+  );
+  t.deepEqual(magnetDecode(result), {
+    xt: 'urn:btih:d2474e86c95b19b8bcfdb92bc12c9d44667cfa36',
+    'x.pe': '123.213.32.10:47450',
+    infoHash: 'd2474e86c95b19b8bcfdb92bc12c9d44667cfa36',
+    infoHashBuffer: Buffer.from('d2474e86c95b19b8bcfdb92bc12c9d44667cfa36', 'hex'),
+    urlList: [],
+    announce: [],
+    peerAddresses: ['123.213.32.10:47450'],
+  });
+});
+
+test('encode: peer-address multiple values', t => {
+  const obj = {
+    xt: 'urn:btih:d2474e86c95b19b8bcfdb92bc12c9d44667cfa36',
+    'x.pe': ['123.213.32.10:47450', '[2001:db8::2]:55013'],
+  };
+  const result = magnetEncode(obj);
+  t.is(
+    result,
+    'magnet:?xt=urn:btih:d2474e86c95b19b8bcfdb92bc12c9d44667cfa36&x.pe=123.213.32.10:47450&x.pe=[2001:db8::2]:55013',
+  );
+  t.deepEqual(magnetDecode(result), {
+    xt: 'urn:btih:d2474e86c95b19b8bcfdb92bc12c9d44667cfa36',
+    'x.pe': ['123.213.32.10:47450', '[2001:db8::2]:55013'],
+    infoHash: 'd2474e86c95b19b8bcfdb92bc12c9d44667cfa36',
+    infoHashBuffer: Buffer.from('d2474e86c95b19b8bcfdb92bc12c9d44667cfa36', 'hex'),
+    urlList: [],
+    announce: [],
+    peerAddresses: ['123.213.32.10:47450', '[2001:db8::2]:55013'],
+  });
+});
+
+// Select specific file indices for download (BEP53) http://www.bittorrent.org/beps/bep_0053.html
+test('encode: select-only', t => {
+  const obj = {
+    xt: 'urn:btih:d2474e86c95b19b8bcfdb92bc12c9d44667cfa36',
+    so: [0, 2, 4, 6, 7, 8],
+  };
+  const result = magnetEncode(obj);
+  t.is(result, 'magnet:?xt=urn:btih:d2474e86c95b19b8bcfdb92bc12c9d44667cfa36&so=0,2,4,6-8');
+  t.deepEqual(magnetDecode(result), {
+    xt: 'urn:btih:d2474e86c95b19b8bcfdb92bc12c9d44667cfa36',
+    infoHash: 'd2474e86c95b19b8bcfdb92bc12c9d44667cfa36',
+    infoHashBuffer: Buffer.from('d2474e86c95b19b8bcfdb92bc12c9d44667cfa36', 'hex'),
+    peerAddresses: [],
+    urlList: [],
+    announce: [],
+    so: [0, 2, 4, 6, 7, 8],
+  });
+});
+
+test('encode: using infoHashV2Buffer', t => {
+  const obj = {
+    infoHashV2Buffer: Buffer.from(
+      'd2474e86c95b19b8bcfdb92bc12c9d44667cfa36d2474e86c95b19b8bcfdb92b',
+      'hex',
+    ),
+  };
+  const result = magnetEncode(obj);
+  t.is(
+    result,
+    'magnet:?xt=urn:btmh:1220d2474e86c95b19b8bcfdb92bc12c9d44667cfa36d2474e86c95b19b8bcfdb92b',
+  );
+  t.deepEqual(magnetDecode(result), {
+    infoHashV2: 'd2474e86c95b19b8bcfdb92bc12c9d44667cfa36d2474e86c95b19b8bcfdb92b',
+    infoHashV2Buffer: Buffer.from(
+      'd2474e86c95b19b8bcfdb92bc12c9d44667cfa36d2474e86c95b19b8bcfdb92b',
+      'hex',
+    ),
+    xt: 'urn:btmh:1220d2474e86c95b19b8bcfdb92bc12c9d44667cfa36d2474e86c95b19b8bcfdb92b',
+    urlList: [],
+    announce: [],
+    peerAddresses: [],
+  });
+});
+
+test('encode: using publicKey', t => {
+  const publicKey = '9a36edf0988ddc1a0fc02d4e8652cce87a71aaac71fce936e650a597c0fb72e0';
+  const obj = {
+    publicKey,
+  };
+  const result = magnetEncode(obj);
+  t.is(
+    result,
+    'magnet:?xs=urn:btpk:9a36edf0988ddc1a0fc02d4e8652cce87a71aaac71fce936e650a597c0fb72e0',
+  );
+});
+
+test('encode: using publicKeyBuffer', t => {
+  const publicKeyBuffer = Buffer.from(
+    '9a36edf0988ddc1a0fc02d4e8652cce87a71aaac71fce936e650a597c0fb72e0',
+    'hex',
+  );
+  const obj = {
+    publicKeyBuffer,
+  };
+  const result = magnetEncode(obj);
+  t.is(
+    result,
+    'magnet:?xs=urn:btpk:9a36edf0988ddc1a0fc02d4e8652cce87a71aaac71fce936e650a597c0fb72e0',
+  );
 });

@@ -5,7 +5,7 @@ import { MagnetData, magnetDecode } from '../src/index.js';
 const leavesOfGrass =
   'magnet:?xt=urn:btih:d2474e86c95b19b8bcfdb92bc12c9d44667cfa36&dn=Leaves+of+Grass+by+Walt+Whitman.epub&tr=udp%3A%2F%2Ftracker.example4.com%3A80&tr=udp%3A%2F%2Ftracker.example5.com%3A80&tr=udp%3A%2F%2Ftracker.example3.com%3A6969&tr=udp%3A%2F%2Ftracker.example2.com%3A80&tr=udp%3A%2F%2Ftracker.example1.com%3A1337';
 
-const empty = { announce: [], urlList: [] };
+const empty = { announce: [], peerAddresses: [], urlList: [] };
 
 test('should decode', t => {
   const result: MagnetData = {
@@ -18,7 +18,9 @@ test('should decode', t => {
     ],
     dn: 'Leaves of Grass by Walt Whitman.epub',
     infoHash: 'd2474e86c95b19b8bcfdb92bc12c9d44667cfa36',
+    infoHashBuffer: Buffer.from('d2474e86c95b19b8bcfdb92bc12c9d44667cfa36', 'hex'),
     name: 'Leaves of Grass by Walt Whitman.epub',
+    peerAddresses: [],
     tr: [
       'udp://tracker.example4.com:80',
       'udp://tracker.example5.com:80',
@@ -31,6 +33,7 @@ test('should decode', t => {
   };
   t.deepEqual(magnetDecode(leavesOfGrass), result);
 });
+
 test('should decode empty magnet URIs return empty object', t => {
   const empty1 = '';
   const empty2 = 'magnet:';
@@ -40,11 +43,13 @@ test('should decode empty magnet URIs return empty object', t => {
   t.deepEqual(magnetDecode(empty2), empty);
   t.deepEqual(magnetDecode(empty3), empty);
 });
+
 test('empty string as keys is okay', t => {
   const uri = 'magnet:?a=&b=&c=';
   const blank = { a: '', b: '', c: '' };
   t.deepEqual(magnetDecode(uri), { ...blank, ...empty });
 });
+
 test('should decode invalid magnet URIs return empty object', t => {
   const invalid1 = 'magnet:?xt=urn:btih:===';
   const invalid2 = 'magnet:?xt';
@@ -157,4 +162,52 @@ test('should decode hybrid bittorent v2 magnet links', t => {
     'urn:btmh:1220d8dd32ac93357c368556af3ac1d95c9d76bd0dff6fa9833ecdac3d53134efabb',
   ]);
   t.is(result.dn, 'bittorrent-v1-v2-hybrid-test');
+});
+
+test('decode: Extracts public key from xs', t => {
+  const key = '9a36edf0988ddc1a0fc02d4e8652cce87a71aaac71fce936e650a597c0fb72e0';
+  const result = magnetDecode(`magnet:?xs=urn:btpk:${key}`);
+  t.is(result.publicKey, key);
+  t.deepEqual(result.publicKeyBuffer, Buffer.from(key, 'hex'));
+});
+
+// Select specific file indices for download (BEP53) http://www.bittorrent.org/beps/bep_0053.html
+test('decode: select-only', t => {
+  const result = magnetDecode('magnet:?xt=urn:btih:64DZYZWMUAVLIWJUXGDIK4QGAAIN7SL6&so=0,2,4,6-8');
+  t.deepEqual(result.so, [0, 2, 4, 6, 7, 8]);
+});
+
+// Peer address expressed as hostname:port (BEP09) http://bittorrent.org/beps/bep_0009.html
+test('decode: peer-address single value', t => {
+  const result = magnetDecode(
+    'magnet:?xt=urn:btih:64DZYZWMUAVLIWJUXGDIK4QGAAIN7SL6&x.pe=123.213.32.10:47450',
+  );
+  const peerAddresses = ['123.213.32.10:47450'];
+  t.deepEqual(result['x.pe'], peerAddresses[0]);
+  t.deepEqual(result.peerAddresses, peerAddresses);
+});
+
+test('decode: peer-address multiple values', t => {
+  const result = magnetDecode(
+    'magnet:?xt=urn:btih:64DZYZWMUAVLIWJUXGDIK4QGAAIN7SL6&x.pe=123.213.32.10:47450&x.pe=[2001:db8::2]:55013',
+  );
+  const peerAddresses = ['123.213.32.10:47450', '[2001:db8::2]:55013'];
+  t.deepEqual(result['x.pe'], peerAddresses);
+  t.deepEqual(result.peerAddresses, peerAddresses);
+});
+
+test('decode: peer-address remove duplicates', t => {
+  const result = magnetDecode(
+    'magnet:?xt=urn:btih:64DZYZWMUAVLIWJUXGDIK4QGAAIN7SL6&x.pe=123.213.32.10:47450&x.pe=[2001:db8::2]:55013&x.pe=123.213.32.10:47450',
+  );
+
+  // raw value is *not* deduped
+  t.deepEqual(result['x.pe'], [
+    '123.213.32.10:47450',
+    '[2001:db8::2]:55013',
+    '123.213.32.10:47450',
+  ]);
+
+  // friendly value is deduped
+  t.deepEqual(result.peerAddresses, ['123.213.32.10:47450', '[2001:db8::2]:55013']);
 });
