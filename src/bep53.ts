@@ -3,7 +3,6 @@
 export function composeRange(range: number[]) {
   return range
     .reduce<string[][]>((acc, cur, idx, arr) => {
-      // @ts-expect-error
       if (idx === 0 || cur !== arr[idx - 1] + 1) {
         acc.push([]);
       }
