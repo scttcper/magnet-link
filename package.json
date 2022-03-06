@@ -28,7 +28,7 @@
     "build": "tsc",
     "test": "ava",
     "test:watch": "ava --watch",
-    "test:ci": "c8 --reporter=text --reporter=lcov ava"
+    "test:ci": "c8 --reporter=text --reporter=lcov ava --tap | tap-junit -o junit -n test-result.xml"
   },
   "dependencies": {
     "@ctrl/ts-base32": "^2.1.1"
@@ -37,11 +37,12 @@
     "@ctrl/eslint-config": "3.3.1",
     "@sindresorhus/tsconfig": "2.0.0",
     "@types/node": "17.0.21",
-    "ava": "4.0.1",
+    "ava": "4.1.0",
     "buffer": "6.0.3",
     "c8": "7.11.0",
-    "ts-node": "10.5.0",
-    "typescript": "4.5.5"
+    "tap-junit": "5.0.1",
+    "ts-node": "10.7.0",
+    "typescript": "4.6.2"
   },
   "ava": {
     "files": [
