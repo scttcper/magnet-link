@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/restrict-plus-operands */
-
 export function composeRange(range: number[]) {
   return range
     .reduce<string[][]>((acc, cur, idx, arr) => {
@@ -7,8 +5,7 @@ export function composeRange(range: number[]) {
         acc.push([]);
       }
 
-      // @ts-expect-error
-      acc[acc.length - 1].push(cur);
+      acc[acc.length - 1].push(`${cur}`);
       return acc;
     }, [])
     .map(cur => {

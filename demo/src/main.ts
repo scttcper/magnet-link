@@ -1,6 +1,6 @@
 import { Buffer } from 'buffer';
 
-import { magnetDecode, magnetEncode } from '../../src';
+import { magnetDecode, magnetEncode } from '../../src/index.js';
 
 // This keeps buffer import from being removed
 Buffer.from('');
