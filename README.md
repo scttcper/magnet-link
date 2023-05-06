@@ -1,4 +1,4 @@
-# magnet-link [![npm](https://badgen.net/npm/v/@ctrl/magnet-link)](https://www.npmjs.com/package/@ctrl/magnet-link) [![CircleCI](https://badgen.net/circleci/github/scttcper/magnet-link)](https://circleci.com/gh/scttcper/magnet-link) [![coverage](https://badgen.net/codecov/c/github/scttcper/magnet-link)](https://codecov.io/gh/scttcper/magnet-link) [![bundlesize](https://badgen.net/bundlephobia/min/@ctrl/magnet-link)](https://bundlephobia.com/result?p=@ctrl/magnet-link)
+# magnet-link [![npm](https://badgen.net/npm/v/@ctrl/magnet-link)](https://www.npmjs.com/package/@ctrl/magnet-link) [![coverage](https://badgen.net/codecov/c/github/scttcper/magnet-link)](https://codecov.io/gh/scttcper/magnet-link)
 
 > Parse a magnet URI into an object
 
