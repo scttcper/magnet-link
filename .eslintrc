@@ -3,5 +3,8 @@
   "env": {
     "node": true
   },
-  "extends": ["@ctrl/eslint-config"]
+  "extends": ["@ctrl/eslint-config"],
+  "rules": {
+    "@typescript-eslint/restrict-template-expressions": "off"
+  }
 }
