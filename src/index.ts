@@ -1,4 +1,5 @@
-import { base32Decode } from '@ctrl/ts-base32';
+import { base32 } from 'rfc4648';
+import { hexToUint8Array, uint8ArrayToHex } from 'uint8array-extras';
 
 import * as bep53Range from './bep53.js';
 
@@ -16,9 +17,9 @@ export interface MagnetData {
    * Parsed xt= parameter see xt
    */
   infoHash?: string;
-  infoHashBuffer?: Buffer;
+  infoHashIntArray?: Uint8Array;
   infoHashV2?: string;
-  infoHashV2Buffer?: Buffer;
+  infoHashV2IntArray?: Uint8Array;
   /**
    * The display name that may be used by the client to display while waiting for metadata
    */
@@ -75,7 +76,7 @@ export interface MagnetData {
   peerAddresses?: string[];
 
   publicKey?: string;
-  publicKeyBuffer?: Buffer;
+  publicKeyIntArray?: Uint8Array;
 }
 
 const start = 'magnet:?';
@@ -127,8 +128,8 @@ export function magnetDecode(uri: string): MagnetData {
       if ((m = xt.match(/^urn:btih:(.{40})/))) {
         result.infoHash = m[1].toLowerCase();
       } else if ((m = xt.match(/^urn:btih:(.{32})/))) {
-        const decodedStr = base32Decode(m[1]);
-        result.infoHash = Buffer.from(decodedStr).toString('hex');
+        const decodedStr = base32.parse(m[1]);
+        result.infoHash = uint8ArrayToHex(decodedStr);
       } else if ((m = xt.match(/^urn:btmh:1220(.{64})/))) {
         result.infoHashV2 = m[1].toLowerCase();
       }
@@ -146,15 +147,15 @@ export function magnetDecode(uri: string): MagnetData {
   }
 
   if (result.infoHash) {
-    result.infoHashBuffer = Buffer.from(result.infoHash, 'hex');
+    result.infoHashIntArray = hexToUint8Array(result.infoHash);
   }
 
   if (result.infoHashV2) {
-    result.infoHashV2Buffer = Buffer.from(result.infoHashV2, 'hex');
+    result.infoHashV2IntArray = hexToUint8Array(result.infoHashV2);
   }
 
   if (result.publicKey) {
-    result.publicKeyBuffer = Buffer.from(result.publicKey, 'hex');
+    result.publicKeyIntArray = hexToUint8Array(result.publicKey);
   }
 
   if (result.dn) {
@@ -240,16 +241,16 @@ export function magnetEncode(data: MagnetData): string {
     xts = new Set(obj.xt);
   }
 
-  if (obj.infoHashBuffer) {
-    xts.add(`urn:btih:${obj.infoHashBuffer.toString('hex')}`);
+  if (obj.infoHashIntArray) {
+    xts.add(`urn:btih:${uint8ArrayToHex(obj.infoHashIntArray)}`);
   }
 
   if (obj.infoHash) {
     xts.add(`urn:btih:${obj.infoHash}`);
   }
 
-  if (obj.infoHashV2Buffer) {
-    xts.add((obj.xt = `urn:btmh:1220${obj.infoHashV2Buffer.toString('hex')}`));
+  if (obj.infoHashV2IntArray) {
+    xts.add((obj.xt = `urn:btmh:1220${uint8ArrayToHex(obj.infoHashV2IntArray)}`));
   }
 
   if (obj.infoHashV2) {
@@ -271,8 +272,8 @@ export function magnetEncode(data: MagnetData): string {
     obj.xt = `urn:btih:${obj.infoHash as string}`;
   }
 
-  if (obj.publicKeyBuffer) {
-    obj.xs = `urn:btpk:${obj.publicKeyBuffer.toString('hex')}`;
+  if (obj.publicKeyIntArray) {
+    obj.xs = `urn:btpk:${uint8ArrayToHex(obj.publicKeyIntArray)}`;
   }
 
   if (obj.publicKey) {

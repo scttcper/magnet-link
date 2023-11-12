@@ -71,7 +71,7 @@ const uri = magnetEncode({
 });
 
 
-You can also use convenience key names like name (dn), infoHash (xt), infoHashBuffer (xt), announce (tr), and keywords (kt).
+You can also use convenience key names like name (dn), infoHash (xt), infoHashIntArray (xt), announce (tr), and keywords (kt).
 ```
 
 ### See Also
