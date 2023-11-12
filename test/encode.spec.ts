@@ -1,3 +1,4 @@
+import { hexToUint8Array } from 'uint8array-extras';
 import { expect, test } from 'vitest';
 
 import { MagnetData, magnetDecode, magnetEncode } from '../src/index.js';
@@ -29,7 +30,7 @@ test('should encode simple magnet uri using convenience names', () => {
     name: 'Leaves of Grass by Walt Whitman.epub',
     peerAddresses: [],
     infoHash: 'd2474e86c95b19b8bcfdb92bc12c9d44667cfa36',
-    infoHashBuffer: Buffer.from('d2474e86c95b19b8bcfdb92bc12c9d44667cfa36', 'hex'),
+    infoHashIntArray: hexToUint8Array('d2474e86c95b19b8bcfdb92bc12c9d44667cfa36'),
     tr: [
       'udp://tracker.example1.com:1337',
       'udp://tracker.example2.com:80',
@@ -73,7 +74,7 @@ test('encode: peer-address single value', () => {
     xt: 'urn:btih:d2474e86c95b19b8bcfdb92bc12c9d44667cfa36',
     'x.pe': '123.213.32.10:47450',
     infoHash: 'd2474e86c95b19b8bcfdb92bc12c9d44667cfa36',
-    infoHashBuffer: Buffer.from('d2474e86c95b19b8bcfdb92bc12c9d44667cfa36', 'hex'),
+    infoHashIntArray: hexToUint8Array('d2474e86c95b19b8bcfdb92bc12c9d44667cfa36'),
     urlList: [],
     announce: [],
     peerAddresses: ['123.213.32.10:47450'],
@@ -93,7 +94,7 @@ test('encode: peer-address multiple values', () => {
     xt: 'urn:btih:d2474e86c95b19b8bcfdb92bc12c9d44667cfa36',
     'x.pe': ['123.213.32.10:47450', '[2001:db8::2]:55013'],
     infoHash: 'd2474e86c95b19b8bcfdb92bc12c9d44667cfa36',
-    infoHashBuffer: Buffer.from('d2474e86c95b19b8bcfdb92bc12c9d44667cfa36', 'hex'),
+    infoHashIntArray: hexToUint8Array('d2474e86c95b19b8bcfdb92bc12c9d44667cfa36'),
     urlList: [],
     announce: [],
     peerAddresses: ['123.213.32.10:47450', '[2001:db8::2]:55013'],
@@ -111,7 +112,7 @@ test('encode: select-only', () => {
   expect(magnetDecode(result)).toEqual({
     xt: 'urn:btih:d2474e86c95b19b8bcfdb92bc12c9d44667cfa36',
     infoHash: 'd2474e86c95b19b8bcfdb92bc12c9d44667cfa36',
-    infoHashBuffer: Buffer.from('d2474e86c95b19b8bcfdb92bc12c9d44667cfa36', 'hex'),
+    infoHashIntArray: hexToUint8Array('d2474e86c95b19b8bcfdb92bc12c9d44667cfa36'),
     peerAddresses: [],
     urlList: [],
     announce: [],
@@ -119,11 +120,10 @@ test('encode: select-only', () => {
   });
 });
 
-test('encode: using infoHashV2Buffer', () => {
+test('encode: using infoHashV2IntArray', () => {
   const obj = {
-    infoHashV2Buffer: Buffer.from(
+    infoHashV2IntArray: hexToUint8Array(
       'd2474e86c95b19b8bcfdb92bc12c9d44667cfa36d2474e86c95b19b8bcfdb92b',
-      'hex',
     ),
   };
   const result = magnetEncode(obj);
@@ -132,9 +132,8 @@ test('encode: using infoHashV2Buffer', () => {
   );
   expect(magnetDecode(result)).toEqual({
     infoHashV2: 'd2474e86c95b19b8bcfdb92bc12c9d44667cfa36d2474e86c95b19b8bcfdb92b',
-    infoHashV2Buffer: Buffer.from(
+    infoHashV2IntArray: hexToUint8Array(
       'd2474e86c95b19b8bcfdb92bc12c9d44667cfa36d2474e86c95b19b8bcfdb92b',
-      'hex',
     ),
     xt: 'urn:btmh:1220d2474e86c95b19b8bcfdb92bc12c9d44667cfa36d2474e86c95b19b8bcfdb92b',
     urlList: [],
@@ -154,13 +153,12 @@ test('encode: using publicKey', () => {
   );
 });
 
-test('encode: using publicKeyBuffer', () => {
-  const publicKeyBuffer = Buffer.from(
+test('encode: using publicKeyIntArray', () => {
+  const publicKeyIntArray = hexToUint8Array(
     '9a36edf0988ddc1a0fc02d4e8652cce87a71aaac71fce936e650a597c0fb72e0',
-    'hex',
   );
   const obj = {
-    publicKeyBuffer,
+    publicKeyIntArray,
   };
   const result = magnetEncode(obj);
   expect(result).toBe(

@@ -1,3 +1,4 @@
+import { hexToUint8Array } from 'uint8array-extras';
 import { expect, test } from 'vitest';
 
 import { MagnetData, magnetDecode } from '../src/index.js';
@@ -18,7 +19,7 @@ test('should decode', () => {
     ],
     dn: 'Leaves of Grass by Walt Whitman.epub',
     infoHash: 'd2474e86c95b19b8bcfdb92bc12c9d44667cfa36',
-    infoHashBuffer: Buffer.from('d2474e86c95b19b8bcfdb92bc12c9d44667cfa36', 'hex'),
+    infoHashIntArray: hexToUint8Array('d2474e86c95b19b8bcfdb92bc12c9d44667cfa36'),
     name: 'Leaves of Grass by Walt Whitman.epub',
     peerAddresses: [],
     tr: [
@@ -170,7 +171,7 @@ test('decode: Extracts public key from xs', () => {
   const key = '9a36edf0988ddc1a0fc02d4e8652cce87a71aaac71fce936e650a597c0fb72e0';
   const result = magnetDecode(`magnet:?xs=urn:btpk:${key}`);
   expect(result.publicKey).toBe(key);
-  expect(result.publicKeyBuffer).toEqual(Buffer.from(key, 'hex'));
+  expect(result.publicKeyIntArray).toEqual(hexToUint8Array(key));
 });
 
 // Select specific file indices for download (BEP53) http://www.bittorrent.org/beps/bep_0053.html
