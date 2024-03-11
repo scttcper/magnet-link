@@ -8,9 +8,7 @@ export function composeRange(range: number[]) {
       acc[acc.length - 1].push(`${cur}`);
       return acc;
     }, [])
-    .map(cur => {
-      return cur.length > 1 ? `${cur[0]}-${cur[cur.length - 1]}` : `${cur[0]}`;
-    });
+    .map(cur => (cur.length > 1 ? `${cur[0]}-${cur[cur.length - 1]}` : `${cur[0]}`));
 }
 
 export function parseRange(range: string[]) {
@@ -19,6 +17,6 @@ export function parseRange(range: string[]) {
 
   return range.reduce<number[]>((acc, cur) => {
     const r = cur.split('-').map(cur => parseInt(cur, 10));
-    return acc.concat(generateRange(r[0]!, r[1]));
+    return acc.concat(generateRange(r[0], r[1]));
   }, []);
 }

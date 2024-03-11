@@ -97,7 +97,7 @@ export function magnetDecode(uri: string): MagnetData {
     }
 
     const key = keyval[0] as keyof MagnetData;
-    const val = parseQueryParamValue(key, keyval[1]!);
+    const val = parseQueryParamValue(key, keyval[1]);
 
     if (val === undefined) {
       return;
