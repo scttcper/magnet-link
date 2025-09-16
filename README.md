@@ -75,6 +75,6 @@ You can also use convenience key names like name (dn), infoHash (xt), infoHashIn
 ```
 
 ### See Also
+- magnet-uri https://github.com/webtorrent/magnet-uri
 - magnet uri spec http://www.bittorrent.org/beps/bep_0053.html
 - more spec http://www.bittorrent.org/beps/bep_0009.html
-- magnet-uri https://github.com/webtorrent/magnet-uri
