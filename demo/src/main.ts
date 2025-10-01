@@ -1,7 +1,14 @@
 import { magnetDecode, magnetEncode } from '../../src/index.js';
 
-(window as any).magnetDecode = magnetDecode;
-(window as any).magnetEncode = magnetEncode;
+declare global {
+  interface Window {
+    magnetDecode: typeof magnetDecode;
+    magnetEncode: typeof magnetEncode;
+  }
+}
+
+window.magnetDecode = magnetDecode;
+window.magnetEncode = magnetEncode;
 
 const input = document.querySelector<HTMLInputElement>('#input')!;
 const output = document.querySelector<HTMLInputElement>('#output')!;

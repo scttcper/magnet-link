@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -7,62 +7,33 @@
     <link rel="stylesheet" href="/src/style.css" />
   </head>
   <body>
-    <div class="bg-white dark:bg-gray-800 dark:text-gray-300 mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="bg-white dark:bg-black dark:text-white mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div class="max-w-2xl mx-auto">
         <div class="text-base max-w-prose">
-          <h1 class="leading-1 text-5xl text-gray-800 dark:text-white font-semibold">
-            magnet-link
-          </h1>
-          <p class="mt-2 text-xl text-gray-900 dark:text-gray-300">
-            Parse a magnet URI into an object
-          </p>
+          <h1 class="leading-10 text-5xl text-black dark:text-white font-semibold">magnet-link</h1>
+          <p class="mt-2 text-xl text-black dark:text-white">Parse a magnet URI into an object</p>
         </div>
         <div class="mt-4 mb-6 flex text-base max-w-prose">
           <div class="rounded-md shadow">
             <a
               href="https://github.com/scttcper/magnet-link#readme"
-              class="
-                w-full
-                flex
-                items-center
-                justify-center
-                px-3
-                py-1
-                border border-transparent
-                text-base
-                font-medium
-                rounded-md
-                text-white
-                dark:text-gray-200
-                bg-green-600
-                hover:bg-green-700
-                tracking-wide
-              "
+              class="w-full flex items-center justify-center px-3 py-1 border border-black dark:border-white text-base font-medium rounded-md text-white dark:text-white bg-black hover:bg-white hover:text-black transition-colors focus:outline-none focus:ring-2 focus:ring-inset focus:ring-black dark:focus:ring-white tracking-wide"
             >
               GitHub
             </a>
           </div>
         </div>
         <div class="max-w-prose mb-6">
-          <h3 class="text-xl font-semibold leading-5 mb-4">Install</h3>
+          <h3 class="text-2xl font-semibold leading-5 mb-4">Install</h3>
           <pre
-            class="
-              rounded
-              bg-gray-100
-              dark:bg-gray-900
-              text-black
-              dark:text-white
-              py-3
-              px-4
-              text-sm
-            "
+            class="rounded bg-white dark:bg-gradient-to-br dark:from-black dark:to-[#111111] text-black dark:text-white border border-black/10 dark:border-white/10 shadow-sm py-3 px-4 text-sm"
           ><code>npm install @ctrl/magnet-link</code></pre>
         </div>
 
         <div class="max-w-prose mb-6">
-          <h3 class="text-xl font-semibold leading-5 mb-4">Demo</h3>
-          <section>
-            <label for="input" class="mb-3">Input string:</label>
+          <h3 class="text-2xl font-semibold leading-5 mb-4">Demo</h3>
+          <section class="grid grid-cols-1 gap-3">
+            <label for="input">Input string:</label>
             <textarea
               id="input"
               type="text"
@@ -70,39 +41,15 @@
               rows="4"
               placeholder="magnet link"
               autocomplete="off"
-              class="
-                shadow-sm
-                block
-                w-full
-                bg-white
-                dark:bg-gray-900
-                focus:ring-blue-500 focus:border-blue-500
-                sm:text-sm
-                border border-gray-300
-                dark:border-gray-700
-                rounded-md
-                mb-3
-              "
+              class="shadow-sm block w-full bg-white dark:bg-black text-black dark:text-white caret-black dark:caret-white ring-1 ring-inset ring-black/20 dark:ring-white/20 border border-black dark:border-white/40 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white placeholder:text-black/50 dark:placeholder:text-white/50 sm:text-sm font-mono rounded-lg mb-3 px-4 py-3 transition-colors"
             ></textarea>
-            <label for="output" class="mb-3">Output:</label>
+            <label for="output">Output:</label>
             <textarea
               id="output"
               type="text"
               style="width: 100%; height: 400px"
               autocomplete="off"
-              class="
-                shadow-sm
-                block
-                w-full
-                bg-white
-                dark:bg-gray-900
-                focus:ring-blue-500 focus:border-blue-500
-                sm:text-sm
-                border border-gray-300
-                dark:border-gray-700
-                rounded-md
-                mb-3
-              "
+              class="shadow-sm block w-full bg-white dark:bg-black text-black dark:text-white caret-black dark:caret-white ring-1 ring-inset ring-black/20 dark:ring-white/20 border border-black dark:border-white/40 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white placeholder:text-black/50 dark:placeholder:text-white/50 sm:text-sm font-mono rounded-lg mb-3 px-4 py-3 transition-colors"
             ></textarea>
           </section>
         </div>
