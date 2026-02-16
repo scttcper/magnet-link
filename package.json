@@ -1,9 +1,9 @@
 {
   "name": "@ctrl/magnet-link",
-  "version": "4.2.0",
+  "version": "0.0.0-placeholder",
   "description": "Parse a magnet URI into an object",
   "author": "Scott Cooper <scttcper@gmail.com>",
-  "homepage": "https://magnet-link.vercel.app",
+  "homepage": "https://magnet-link.ep.workers.dev",
   "license": "MIT",
   "repository": "scttcper/magnet-link",
   "keywords": [
@@ -23,34 +23,25 @@
     "dev": "npm run demo:watch",
     "demo:build": "npm run build --workspace=demo",
     "demo:watch": "npm run dev --workspace=demo",
-    "lint": "oxlint . && prettier --check . --experimental-cli",
-    "lint:fix": "oxlint . --fix && prettier --write . --log-level=error --experimental-cli",
+    "lint": "oxlint . && oxlint .",
+    "lint:fix": "oxlint . --fix && oxlint . --fix",
     "prepare": "npm run build",
     "build": "tsc",
     "test": "vitest run",
-    "test:watch": "vitest",
-    "test:ci": "vitest run --coverage --reporter=default --reporter=junit --outputFile=./junit.xml"
+    "test:watch": "vitest"
   },
   "dependencies": {
     "rfc4648": "^1.5.4",
     "uint8array-extras": "^1.5.0"
   },
   "devDependencies": {
-    "@ctrl/oxlint-config": "1.2.6",
-    "@sindresorhus/tsconfig": "8.0.1",
-    "@types/node": "24.6.1",
-    "@vitest/coverage-v8": "3.2.4",
-    "oxlint": "1.19.0",
-    "prettier": "3.6.2",
+    "@ctrl/oxlint-config": "1.4.0",
+    "@sindresorhus/tsconfig": "8.1.0",
+    "@types/node": "25.2.3",
+    "oxfmt": "0.33.0",
+    "oxlint": "1.48.0",
     "typescript": "5.9.3",
-    "vitest": "3.2.4"
-  },
-  "prettier": {
-    "singleQuote": true,
-    "trailingComma": "all",
-    "arrowParens": "avoid",
-    "semi": true,
-    "printWidth": 100
+    "vitest": "4.0.18"
   },
   "workspaces": [
     "demo"
@@ -65,6 +56,6 @@
     ]
   },
   "engines": {
-    "node": ">=18"
+    "node": ">20"
   }
 }

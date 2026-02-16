@@ -11,12 +11,12 @@ export function composeRange(range: number[]) {
     .map(cur => (cur.length > 1 ? `${cur[0]}-${cur[cur.length - 1]}` : `${cur[0]}`));
 }
 
-export function parseRange(range: string[]) {
-  const generateRange = (start: number, end = start) =>
-    Array.from({ length: end - start + 1 }, (_, idx) => idx + start);
+const generateRange = (start: number, end = start) =>
+  Array.from({ length: end - start + 1 }, (_, idx) => idx + start);
 
+export function parseRange(range: string[]) {
   return range.reduce<number[]>((acc, cur) => {
-    const r = cur.split('-').map(cur => parseInt(cur, 10));
-    return acc.concat(generateRange(r[0], r[1]));
+    const r = cur.split('-').map(cur => Number.parseInt(cur, 10));
+    return [...acc, ...generateRange(r[0], r[1])];
   }, []);
 }

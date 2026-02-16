@@ -8,9 +8,9 @@
     "serve": "vite preview"
   },
   "devDependencies": {
-    "@tailwindcss/vite": "4.1.13",
-    "tailwindcss": "4.1.13",
+    "@tailwindcss/vite": "4.1.18",
+    "tailwindcss": "4.1.18",
     "typescript": "5.9.3",
-    "vite": "7.1.7"
+    "vite": "7.3.1"
   }
 }

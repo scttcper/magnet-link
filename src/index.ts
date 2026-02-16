@@ -83,7 +83,7 @@ const start = 'magnet:?';
 
 export function magnetDecode(uri: string): MagnetData {
   // Support 'stream-magnet:' as well
-  const data = uri.substr(uri.indexOf(start) + start.length);
+  const data = uri.slice(uri.indexOf(start) + start.length);
 
   const params = data && data.length >= 0 ? data.split('&') : [];
 
@@ -175,16 +175,16 @@ export function magnetDecode(uri: string): MagnetData {
 
   result.urlList = [];
   if (typeof result.as === 'string' || Array.isArray(result.as)) {
-    result.urlList = result.urlList.concat(result.as);
+    result.urlList = [...result.urlList, ...(Array.isArray(result.as) ? result.as : [result.as])];
   }
 
   if (typeof result.ws === 'string' || Array.isArray(result.ws)) {
-    result.urlList = result.urlList.concat(result.ws);
+    result.urlList = [...result.urlList, ...(Array.isArray(result.ws) ? result.ws : [result.ws])];
   }
 
   result.peerAddresses = [];
   if (typeof result['x.pe'] === 'string' || Array.isArray(result['x.pe'])) {
-    result.peerAddresses = result.peerAddresses.concat(result['x.pe']);
+    result.peerAddresses = [...result.peerAddresses, ...(Array.isArray(result['x.pe']) ? result['x.pe'] : [result['x.pe']])];
   }
 
   result.announce = [...new Set(result.announce)].sort((a, b) => a.localeCompare(b));
@@ -256,7 +256,7 @@ export function magnetEncode(data: MagnetData): string {
     xts.add(`urn:btmh:1220${obj.infoHashV2}`);
   }
 
-  const xtsDeduped = Array.from(xts);
+  const xtsDeduped = [...xts];
   if (xtsDeduped.length === 1) {
     obj.xt = xtsDeduped[0];
   }
