@@ -2,29 +2,36 @@
   "name": "@ctrl/magnet-link",
   "version": "0.0.0-placeholder",
   "description": "Parse a magnet URI into an object",
-  "author": "Scott Cooper <scttcper@gmail.com>",
+  "keywords": [
+    "link",
+    "magnet",
+    "magnet-uri",
+    "torrent"
+  ],
   "homepage": "https://magnet-link.ep.workers.dev",
   "license": "MIT",
+  "author": "Scott Cooper <scttcper@gmail.com>",
   "repository": "scttcper/magnet-link",
-  "keywords": [
-    "torrent",
-    "magnet",
-    "link",
-    "magnet-uri"
+  "workspaces": [
+    "demo"
   ],
-  "type": "module",
-  "exports": "./dist/src/index.js",
-  "types": "./dist/src/index.d.ts",
   "files": [
     "dist/src"
   ],
+  "type": "module",
   "sideEffects": false,
+  "types": "./dist/src/index.d.ts",
+  "exports": "./dist/src/index.js",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
   "scripts": {
     "dev": "npm run demo:watch",
     "demo:build": "npm run build --workspace=demo",
     "demo:watch": "npm run dev --workspace=demo",
-    "lint": "oxlint . && oxlint .",
-    "lint:fix": "oxlint . --fix && oxlint . --fix",
+    "lint": "oxlint . && oxfmt --check",
+    "lint:fix": "oxlint . --fix && oxfmt",
     "prepare": "npm run build",
     "build": "tsc",
     "test": "vitest run",
@@ -43,13 +50,6 @@
     "oxlint": "1.48.0",
     "typescript": "5.9.3",
     "vitest": "4.0.18"
-  },
-  "workspaces": [
-    "demo"
-  ],
-  "publishConfig": {
-    "access": "public",
-    "provenance": true
   },
   "release": {
     "branches": [
