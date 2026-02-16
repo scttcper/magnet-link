@@ -11,12 +11,24 @@ export function composeRange(range: number[]) {
     .map(cur => (cur.length > 1 ? `${cur[0]}-${cur[cur.length - 1]}` : `${cur[0]}`));
 }
 
-const generateRange = (start: number, end = start) =>
-  Array.from({ length: end - start + 1 }, (_, idx) => idx + start);
+function generateRange(start: number, end: number, out: number[]) {
+  for (let i = start; i <= end; i++) {
+    out.push(i);
+  }
+}
 
 export function parseRange(range: string[]) {
-  return range.reduce<number[]>((acc, cur) => {
-    const r = cur.split('-').map(cur => Number.parseInt(cur, 10));
-    return [...acc, ...generateRange(r[0], r[1])];
-  }, []);
+  const acc: number[] = [];
+  // eslint-disable-next-line typescript-eslint/prefer-for-of -- indexed for-loop is faster
+  for (let i = 0; i < range.length; i++) {
+    const cur = range[i];
+    const dash = cur.indexOf('-');
+    if (dash === -1) {
+      acc.push(+cur);
+    } else {
+      generateRange(+cur.slice(0, dash), +cur.slice(dash + 1), acc);
+    }
+  }
+
+  return acc;
 }
