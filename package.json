@@ -28,7 +28,8 @@
     "prepare": "npm run build",
     "build": "tsc",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "bench": "vitest bench ./test/decode.bench.ts"
   },
   "dependencies": {
     "rfc4648": "^1.5.4",
