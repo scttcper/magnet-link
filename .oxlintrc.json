@@ -4,5 +4,13 @@
     "node": true
   },
   "plugins": ["react", "unicorn", "typescript", "oxc", "import"],
-  "extends": ["./node_modules/@ctrl/oxlint-config/.oxlintrc.json"]
+  "extends": ["./node_modules/@ctrl/oxlint-config/.oxlintrc.json"],
+  "overrides": [
+    {
+      "files": ["demo/src/vite-env.d.ts"],
+      "rules": {
+        "import/unambiguous": "off"
+      }
+    }
+  ]
 }

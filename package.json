@@ -33,6 +33,7 @@
     "lint": "oxlint . && oxfmt --check",
     "lint:fix": "oxlint . --fix && oxfmt",
     "prepare": "npm run build",
+    "typecheck": "tsc",
     "build": "tsc",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -43,13 +44,13 @@
     "uint8array-extras": "^1.5.0"
   },
   "devDependencies": {
-    "@ctrl/oxlint-config": "1.4.0",
+    "@ctrl/oxlint-config": "1.5.0",
     "@sindresorhus/tsconfig": "8.1.0",
-    "@types/node": "25.2.3",
-    "oxfmt": "0.33.0",
-    "oxlint": "1.48.0",
-    "typescript": "5.9.3",
-    "vitest": "4.0.18"
+    "@types/node": "25.8.0",
+    "oxfmt": "0.50.0",
+    "oxlint": "1.65.0",
+    "typescript": "6.0.3",
+    "vitest": "4.1.6"
   },
   "release": {
     "branches": [
