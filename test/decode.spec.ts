@@ -11,11 +11,11 @@ const empty: ReturnType<typeof magnetDecode> = { announce: [], peerAddresses: []
 test('should decode', () => {
   const result: MagnetData = {
     announce: [
-      'udp://tracker.example1.com:1337',
-      'udp://tracker.example2.com:80',
-      'udp://tracker.example3.com:6969',
       'udp://tracker.example4.com:80',
       'udp://tracker.example5.com:80',
+      'udp://tracker.example3.com:6969',
+      'udp://tracker.example2.com:80',
+      'udp://tracker.example1.com:1337',
     ],
     dn: 'Leaves of Grass by Walt Whitman.epub',
     infoHash: 'd2474e86c95b19b8bcfdb92bc12c9d44667cfa36',
@@ -163,11 +163,11 @@ test('should decode dedupe repeated trackers', () => {
     'magnet:?xt=urn:ed2k:354B15E68FB8F36D7CD88FF94116CDC1&tr=udp%3A%2F%2Ftracker.example4.com%3A80&tr=udp%3A%2F%2Ftracker.example4.com%3A80&tr=udp%3A%2F%2Ftracker.example5.com%3A80&tr=udp%3A%2F%2Ftracker.example3.com%3A6969&tr=udp%3A%2F%2Ftracker.example2.com%3A80&tr=udp%3A%2F%2Ftracker.example1.com%3A1337',
   );
   const announce = [
-    'udp://tracker.example1.com:1337',
-    'udp://tracker.example2.com:80',
-    'udp://tracker.example3.com:6969',
     'udp://tracker.example4.com:80',
     'udp://tracker.example5.com:80',
+    'udp://tracker.example3.com:6969',
+    'udp://tracker.example2.com:80',
+    'udp://tracker.example1.com:1337',
   ];
   expect(result.announce).toEqual(announce);
 });
@@ -210,6 +210,14 @@ test('decode: Extracts public key from xs', () => {
   const result = magnetDecode(`magnet:?xs=urn:btpk:${key}`);
   expect(result.publicKey).toBe(key);
   expect(result.publicKeyIntArray).toEqual(hexToUint8Array(key));
+});
+
+test('decode: Extracts BEP46 salt', () => {
+  const key = '8543d3e6115f0f98c944077a4493dcd543e49c739fd998550a1f614ab36ed63e';
+  const result = magnetDecode(`magnet:?xs=urn:btpk:${key}&s=6e`);
+  expect(result.publicKey).toBe(key);
+  expect(result.s).toBe('6e');
+  expect(result.salt).toBe('6e');
 });
 
 // Select specific file indices for download (BEP53) http://www.bittorrent.org/beps/bep_0053.html

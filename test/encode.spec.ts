@@ -206,3 +206,25 @@ test('encode: using publicKeyIntArray', () => {
     'magnet:?xs=urn:btpk:9a36edf0988ddc1a0fc02d4e8652cce87a71aaac71fce936e650a597c0fb72e0',
   );
 });
+
+test('encode: using BEP46 salt', () => {
+  const publicKey = '8543d3e6115f0f98c944077a4493dcd543e49c739fd998550a1f614ab36ed63e';
+  const result = magnetEncode({
+    publicKey,
+    salt: '6e',
+  });
+
+  expect(result).toBe(
+    'magnet:?xs=urn:btpk:8543d3e6115f0f98c944077a4493dcd543e49c739fd998550a1f614ab36ed63e&s=6e',
+  );
+  expect(magnetDecode(result)).toEqual({
+    announce: [],
+    publicKey,
+    publicKeyIntArray: hexToUint8Array(publicKey),
+    peerAddresses: [],
+    s: '6e',
+    salt: '6e',
+    urlList: [],
+    xs: `urn:btpk:${publicKey}`,
+  });
+});

@@ -77,6 +77,15 @@ export interface MagnetData {
 
   publicKey?: string;
   publicKeyIntArray?: Uint8Array;
+  /**
+   * Optional BEP46 mutable torrent salt.
+   * @link http://www.bittorrent.org/beps/bep_0046.html
+   */
+  s?: string | string[];
+  /**
+   * Optional BEP46 mutable torrent salt. Convenience alias for s.
+   */
+  salt?: string | string[];
 }
 
 const start = 'magnet:?';
@@ -220,8 +229,12 @@ export function magnetDecode(uri: string): MagnetData {
     }
   }
 
-  result.announce = [...new Set(result.announce)].sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
-  result.urlList = [...new Set(urlList)].sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
+  if (result.s) {
+    result.salt = result.s;
+  }
+
+  result.announce = [...new Set(result.announce)];
+  result.urlList = [...new Set(urlList)];
   result.peerAddresses = [...new Set(peerAddresses)];
 
   return result;
@@ -325,11 +338,15 @@ export function magnetEncode(data: MagnetData): string {
     obj['x.pe'] = obj.peerAddresses;
   }
 
+  if (obj.salt) {
+    obj.s = obj.salt;
+  }
+
   let acc = start;
   let paramIdx = 0;
   const keys = Object.keys(obj);
   for (const key of keys) {
-    if (key.length !== 2 && key !== 'x.pe') {
+    if (key.length !== 2 && key !== 's' && key !== 'x.pe') {
       continue;
     }
 
