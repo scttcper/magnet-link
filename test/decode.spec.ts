@@ -73,6 +73,25 @@ test('should decode invalid magnet URIs return only valid keys (ignoring invalid
   expect(magnetDecode(invalid3)).toEqual({ c: 'c', ...empty });
 });
 
+test('should decode inherited object keys as normal params', () => {
+  const result = magnetDecode('magnet:?toString=x&hasOwnProperty=y');
+  expect(result.toString).toBe('x');
+  expect(result.hasOwnProperty).toBe('y');
+});
+
+test('should decode prototype keys as own params without mutation', () => {
+  const result = magnetDecode('magnet:?__proto__=x&constructor=y&prototype=z');
+  expect(Array.isArray(result)).toBe(false);
+  expect(Object.getPrototypeOf(result)).toBe(null);
+  expect(result.announce).toEqual([]);
+  expect(result.peerAddresses).toEqual([]);
+  expect(result.urlList).toEqual([]);
+  expect((result as any).__proto__).toBe('x');
+  expect(result.constructor).toBe('y');
+  expect((result as any).prototype).toBe('z');
+  expect({}.constructor).toBe(Object);
+});
+
 test('should ignore invalid percent-encoded params without throwing', () => {
   const result = magnetDecode('magnet:?dn=%E0%A4%A&tr=udp%3A%2F%2Ftracker.example.com%3A80');
   expect(result).toEqual({
@@ -110,6 +129,12 @@ test('should decode extracts keywords', () => {
     'magnet:?xt=urn:btih:64DZYZWMUAVLIWJUXGDIK4QGAAIN7SL6&kt=joe+blow+mp3',
   );
   expect(result.keywords).toEqual(['joe', 'blow', 'mp3']);
+});
+
+test('should flatten repeated keyword params', () => {
+  const result = magnetDecode('magnet:?kt=joe+blow&kt=mp3+live');
+  expect(result.kt).toEqual(['joe', 'blow', 'mp3', 'live']);
+  expect(result.keywords).toEqual(['joe', 'blow', 'mp3', 'live']);
 });
 
 test('should preserve escaped pluses in names and keywords', () => {

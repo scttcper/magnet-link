@@ -26,6 +26,18 @@ test('parse: multiple ranges between a number', () => {
   expect(range).toEqual([1, 2, 3, 6, 11, 12, 13]);
 });
 
+test('parse: ignores invalid ranges', () => {
+  const range = parseRange(['3-1', '-1', 'a-b', '2']);
+
+  expect(range).toEqual([2]);
+});
+
+test('parse: ignores ranges that exceed the max expanded size', () => {
+  const range = parseRange(['0-1000000', '1-3']);
+
+  expect(range).toEqual([1, 2, 3]);
+});
+
 test('compose: a number', () => {
   const range = composeRange([1]);
 

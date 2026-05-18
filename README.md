@@ -14,7 +14,7 @@ npm install @ctrl/magnet-link
 
 ### Use
 
-#### Encode
+#### Decode
 
 ```ts
 import { magnetDecode } from '@ctrl/magnet-link';
@@ -33,25 +33,27 @@ The entire parsed object
   "xt": "urn:btih:d2474e86c95b19b8bcfdb92bc12c9d44667cfa36",
   "dn": "Leaves of Grass by Walt Whitman.epub",
   "tr": [
-    "udp://tracker.example1.com:1337",
-    "udp://tracker.example2.com:80",
-    "udp://tracker.example3.com:6969",
     "udp://tracker.example4.com:80",
-    "udp://tracker.example5.com:80"
+    "udp://tracker.example5.com:80",
+    "udp://tracker.example3.com:6969",
+    "udp://tracker.example2.com:80",
+    "udp://tracker.example1.com:1337"
   ],
   "name": "Leaves of Grass by Walt Whitman.epub",
   "infoHash": "d2474e86c95b19b8bcfdb92bc12c9d44667cfa36",
   "announce": [
-    "udp://tracker.example1.com:1337",
-    "udp://tracker.example2.com:80",
-    "udp://tracker.example3.com:6969",
     "udp://tracker.example4.com:80",
-    "udp://tracker.example5.com:80"
+    "udp://tracker.example5.com:80",
+    "udp://tracker.example3.com:6969",
+    "udp://tracker.example2.com:80",
+    "udp://tracker.example1.com:1337"
   ]
 }
 ```
 
-#### Decode
+Repeated trackers, webseeds, and peer addresses are deduped in insertion order.
+
+#### Encode
 
 ```ts
 import { magnetEncode } from '@ctrl/magnet-link';
@@ -65,22 +67,34 @@ const uri = magnetEncode({
   ],
   xl: '10826029',
   dn: 'mediawiki-1.15.1.tar.gz',
-  tr: [
-    'udp://tracker.openbittorrent.com:80/announce',
-  ],
+  tr: ['udp://tracker.openbittorrent.com:80/announce'],
   as: 'http://download.wikimedia.org/mediawiki/1.15/mediawiki-1.15.1.tar.gz',
-  xs: [
-    'http://cache.example.org/XRX2PEFXOOEJFRVUCX6HMZMKS5TWG4K5',
-    'dchub://example.org',
-  ],
+  xs: ['http://cache.example.org/XRX2PEFXOOEJFRVUCX6HMZMKS5TWG4K5', 'dchub://example.org'],
+});
+```
+
+You can also use convenience key names like name (dn), infoHash (xt), infoHashIntArray (xt), announce (tr), keywords (kt), publicKey (xs), and salt (s).
+
+```ts
+const hybrid = magnetEncode({
+  infoHash: '631a31dd0a46257d5078c0dee4e66e26f73e42ac',
+  infoHashV2: 'd8dd32ac93357c368556af3ac1d95c9d76bd0dff6fa9833ecdac3d53134efabb',
 });
 
+const mutable = magnetEncode({
+  publicKey: '8543d3e6115f0f98c944077a4493dcd543e49c739fd998550a1f614ab36ed63e',
+  salt: '6e',
+});
 
-You can also use convenience key names like name (dn), infoHash (xt), infoHashIntArray (xt), announce (tr), and keywords (kt).
+const selectOnly = magnetEncode({
+  infoHash: 'd2474e86c95b19b8bcfdb92bc12c9d44667cfa36',
+  so: [0, 2, 4, 6, 7, 8],
+});
 ```
 
 ### See Also
 
 - magnet-uri https://github.com/webtorrent/magnet-uri
-- magnet uri spec http://www.bittorrent.org/beps/bep_0053.html
-- more spec http://www.bittorrent.org/beps/bep_0009.html
+- BEP9 - Extension for Peers to Send Metadata Files http://www.bittorrent.org/beps/bep_0009.html
+- BEP46 - Updating Torrents Via DHT Mutable Items http://www.bittorrent.org/beps/bep_0046.html
+- BEP53 - Magnet URI extension - Select specific file indices for download http://www.bittorrent.org/beps/bep_0053.html

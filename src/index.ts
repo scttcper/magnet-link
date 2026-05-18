@@ -99,7 +99,10 @@ export function magnetDecode(uri: string): MagnetData {
   const startIdx = uri.indexOf(start);
   const queryStart = startIdx === -1 ? uri.length : startIdx + start.length;
 
-  const result: Partial<MagnetData> = {};
+  // Query keys are user-controlled. Keep this as a null-prototype object so
+  // keys like `__proto__` and `toString` are parsed as data, not prototype
+  // accessors/inherited properties. Use own-key checks if this changes.
+  const result: Partial<MagnetData> = Object.create(null);
   for (let paramStart = queryStart; paramStart < uri.length; ) {
     const ampIdx = uri.indexOf('&', paramStart);
     const paramEnd = ampIdx === -1 ? uri.length : ampIdx;
@@ -125,9 +128,13 @@ export function magnetDecode(uri: string): MagnetData {
             result[key] = val as any;
           } else if (Array.isArray(r)) {
             // If there are repeated parameters, return an array of values
-            (r as any[]).push(val);
+            if (Array.isArray(val)) {
+              (r as any[]).push(...val);
+            } else {
+              (r as any[]).push(val);
+            }
           } else {
-            result[key] = [r, val] as any;
+            result[key] = Array.isArray(val) ? [r, ...val] : ([r, val] as any);
           }
         }
       }
