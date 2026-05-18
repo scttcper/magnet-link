@@ -55,10 +55,12 @@ test('should decode invalid magnet URIs return empty object', () => {
   const invalid1 = 'magnet:?xt=urn:btih:===';
   const invalid2 = 'magnet:?xt';
   const invalid3 = 'magnet:?xt=?dn=';
+  const invalid4 = 'https://example.com/?tr=udp%3A%2F%2Ftracker.example.com%3A80';
 
   expect(magnetDecode(invalid1)).toEqual(empty);
   expect(magnetDecode(invalid2)).toEqual(empty);
   expect(magnetDecode(invalid3)).toEqual(empty);
+  expect(magnetDecode(invalid4)).toEqual(empty);
 });
 
 test('should decode invalid magnet URIs return only valid keys (ignoring invalid ones)', () => {
@@ -71,8 +73,25 @@ test('should decode invalid magnet URIs return only valid keys (ignoring invalid
   expect(magnetDecode(invalid3)).toEqual({ c: 'c', ...empty });
 });
 
+test('should ignore invalid percent-encoded params without throwing', () => {
+  const result = magnetDecode('magnet:?dn=%E0%A4%A&tr=udp%3A%2F%2Ftracker.example.com%3A80');
+  expect(result).toEqual({
+    announce: ['udp://tracker.example.com:80'],
+    peerAddresses: [],
+    tr: 'udp://tracker.example.com:80',
+    urlList: [],
+  });
+});
+
 test('should decode extracts 40-char hex BitTorrent info_hash', () => {
   const result = magnetDecode('magnet:?xt=urn:btih:aad050ee1bb22e196939547b134535824dabf0ce');
+  expect(result.infoHash).toBe('aad050ee1bb22e196939547b134535824dabf0ce');
+});
+
+test('should decode stream-magnet URIs', () => {
+  const result = magnetDecode(
+    'stream-magnet:?xt=urn:btih:aad050ee1bb22e196939547b134535824dabf0ce',
+  );
   expect(result.infoHash).toBe('aad050ee1bb22e196939547b134535824dabf0ce');
 });
 
@@ -81,11 +100,24 @@ test('should decode extracts 32-char base32 BitTorrent info_hash', () => {
   expect(result.infoHash).toBe('f7079c66cca02ab45934b9868572060010dfc97e');
 });
 
+test('should decode extracts lowercase 32-char base32 BitTorrent info_hash', () => {
+  const result = magnetDecode('magnet:?xt=urn:btih:64dzyzwmuavliwjuxgdik4qgaain7sl6');
+  expect(result.infoHash).toBe('f7079c66cca02ab45934b9868572060010dfc97e');
+});
+
 test('should decode extracts keywords', () => {
   const result = magnetDecode(
     'magnet:?xt=urn:btih:64DZYZWMUAVLIWJUXGDIK4QGAAIN7SL6&kt=joe+blow+mp3',
   );
   expect(result.keywords).toEqual(['joe', 'blow', 'mp3']);
+});
+
+test('should preserve escaped pluses in names and keywords', () => {
+  const result = magnetDecode('magnet:?dn=album%2Bbonus+disc&kt=rock%2Broll+live%20set');
+  expect(result.dn).toBe('album+bonus disc');
+  expect(result.name).toBe('album+bonus disc');
+  expect(result.kt).toEqual(['rock+roll', 'live set']);
+  expect(result.keywords).toEqual(['rock+roll', 'live set']);
 });
 
 test('should decode complicated magnet uri (multiple xt params, and as, xs)', () => {
@@ -152,6 +184,12 @@ test('should decode bittorrent v2 magnet links', () => {
   );
   expect(result.xt).toBe(
     'urn:btmh:1220caf1e1c30e81cb361b9ee167c4aa64228a7fa4fa9f6105232b28ad099f3a302e',
+  );
+  expect(result.infoHashV2).toBe(
+    'caf1e1c30e81cb361b9ee167c4aa64228a7fa4fa9f6105232b28ad099f3a302e',
+  );
+  expect(result.infoHashV2IntArray).toEqual(
+    hexToUint8Array('caf1e1c30e81cb361b9ee167c4aa64228a7fa4fa9f6105232b28ad099f3a302e'),
   );
 });
 

@@ -60,6 +60,47 @@ test('should encode simple magnet uri using convenience names', () => {
   expect(magnetDecode(result)).toEqual(obj);
 });
 
+test('should encode hybrid links from convenience hash fields', () => {
+  const result = magnetEncode({
+    infoHash: '631a31dd0a46257d5078c0dee4e66e26f73e42ac',
+    infoHashV2: 'd8dd32ac93357c368556af3ac1d95c9d76bd0dff6fa9833ecdac3d53134efabb',
+  });
+
+  expect(result).toBe(
+    'magnet:?xt=urn:btih:631a31dd0a46257d5078c0dee4e66e26f73e42ac&xt=urn:btmh:1220d8dd32ac93357c368556af3ac1d95c9d76bd0dff6fa9833ecdac3d53134efabb',
+  );
+  expect(magnetDecode(result)).toEqual({
+    announce: [],
+    infoHash: '631a31dd0a46257d5078c0dee4e66e26f73e42ac',
+    infoHashIntArray: hexToUint8Array('631a31dd0a46257d5078c0dee4e66e26f73e42ac'),
+    infoHashV2: 'd8dd32ac93357c368556af3ac1d95c9d76bd0dff6fa9833ecdac3d53134efabb',
+    infoHashV2IntArray: hexToUint8Array(
+      'd8dd32ac93357c368556af3ac1d95c9d76bd0dff6fa9833ecdac3d53134efabb',
+    ),
+    peerAddresses: [],
+    urlList: [],
+    xt: [
+      'urn:btih:631a31dd0a46257d5078c0dee4e66e26f73e42ac',
+      'urn:btmh:1220d8dd32ac93357c368556af3ac1d95c9d76bd0dff6fa9833ecdac3d53134efabb',
+    ],
+  });
+});
+
+test('should encode escaped pluses in names and keywords', () => {
+  const result = magnetEncode({
+    name: 'album+bonus disc',
+    keywords: ['rock+roll', 'live set'],
+  });
+
+  expect(result).toBe('magnet:?dn=album%2Bbonus+disc&kt=rock%2Broll+live%20set');
+  expect(magnetDecode(result)).toMatchObject({
+    dn: 'album+bonus disc',
+    keywords: ['rock+roll', 'live set'],
+    kt: ['rock+roll', 'live set'],
+    name: 'album+bonus disc',
+  });
+});
+
 // Peer address expressed as hostname:port (BEP09) http://bittorrent.org/beps/bep_0009.html
 test('encode: peer-address single value', () => {
   const obj = {

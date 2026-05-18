@@ -80,51 +80,54 @@ export interface MagnetData {
 }
 
 const start = 'magnet:?';
+const btihHexPattern = /^urn:btih:([a-fA-F0-9]{40})$/;
+const btihBase32Pattern = /^urn:btih:([a-z2-7]{32})$/i;
+const btmhSha256Pattern = /^urn:btmh:1220([a-fA-F0-9]{64})$/;
+const btpkPattern = /^urn:btpk:([a-fA-F0-9]{64})$/;
 
 export function magnetDecode(uri: string): MagnetData {
   // Support 'stream-magnet:' as well
-  const data = uri.slice(uri.indexOf(start) + start.length);
-
-  const params = data ? data.split('&') : [];
+  const startIdx = uri.indexOf(start);
+  const queryStart = startIdx === -1 ? uri.length : startIdx + start.length;
 
   const result: Partial<MagnetData> = {};
-  // eslint-disable-next-line typescript-eslint/prefer-for-of -- indexed for-loop is faster
-  for (let i = 0; i < params.length; i++) {
-    const param = params[i];
-    const eqIdx = param.indexOf('=');
+  for (let paramStart = queryStart; paramStart < uri.length; ) {
+    const ampIdx = uri.indexOf('&', paramStart);
+    const paramEnd = ampIdx === -1 ? uri.length : ampIdx;
+    const eqIdx = uri.indexOf('=', paramStart);
 
     // No '=' found, or empty key — skip
-    if (eqIdx <= 0) {
-      continue;
+    if (eqIdx > paramStart && eqIdx < paramEnd) {
+      // Reject params with multiple '=' (preserves original split('=').length !== 2 check)
+      const secondEqIdx = uri.indexOf('=', eqIdx + 1);
+      if (secondEqIdx === -1 || secondEqIdx >= paramEnd) {
+        const key = uri.slice(paramStart, eqIdx) as keyof MagnetData;
+        let val: string | number | string[] | number[] | undefined;
+        try {
+          val = parseQueryParamValue(key, uri.slice(eqIdx + 1, paramEnd));
+        } catch {
+          val = undefined;
+        }
+
+        if (val !== undefined) {
+          const r = result[key];
+
+          if (r === undefined) {
+            result[key] = val as any;
+          } else if (Array.isArray(r)) {
+            // If there are repeated parameters, return an array of values
+            (r as any[]).push(val);
+          } else {
+            result[key] = [r, val] as any;
+          }
+        }
+      }
     }
 
-    // Reject params with multiple '=' (preserves original split('=').length !== 2 check)
-    const valPart = param.slice(eqIdx + 1);
-    if (valPart.includes('=')) {
-      continue;
+    if (ampIdx === -1) {
+      break;
     }
-
-    const key = param.slice(0, eqIdx) as keyof MagnetData;
-    const val = parseQueryParamValue(key, valPart);
-
-    if (val === undefined) {
-      continue;
-    }
-
-    const r = result[key];
-
-    if (!r) {
-      result[key] = val as any;
-      continue;
-    }
-
-    // If there are repeated parameters, return an array of values
-    if (Array.isArray(r)) {
-      (r as any[]).push(val);
-      continue;
-    }
-
-    result[key] = [r, val] as any;
+    paramStart = ampIdx + 1;
   }
 
   if (result.xt) {
@@ -132,13 +135,21 @@ export function magnetDecode(uri: string): MagnetData {
     const xtCount = xts ? xts.length : 1;
     for (let i = 0; i < xtCount; i++) {
       const xt: string = xts ? xts[i] : (result.xt as string);
-      if (xt.startsWith('urn:btih:') && xt.length >= 49) {
-        result.infoHash = xt.slice(9, 49).toLowerCase();
-      } else if (xt.startsWith('urn:btih:') && xt.length >= 41) {
-        const decodedStr = base32.parse(xt.slice(9, 41));
-        result.infoHash = uint8ArrayToHex(decodedStr);
-      } else if (xt.startsWith('urn:btmh:1220') && xt.length >= 77) {
-        result.infoHashV2 = xt.slice(13, 77).toLowerCase();
+      const btihHex = btihHexPattern.exec(xt);
+      if (btihHex) {
+        result.infoHash = btihHex[1].toLowerCase();
+        continue;
+      }
+
+      const btihBase32 = btihBase32Pattern.exec(xt);
+      if (btihBase32) {
+        result.infoHash = uint8ArrayToHex(base32.parse(btihBase32[1].toUpperCase()));
+        continue;
+      }
+
+      const btmhSha256 = btmhSha256Pattern.exec(xt);
+      if (btmhSha256) {
+        result.infoHashV2 = btmhSha256[1].toLowerCase();
       }
     }
   }
@@ -148,8 +159,9 @@ export function magnetDecode(uri: string): MagnetData {
     const xsCount = xss ? xss.length : 1;
     for (let i = 0; i < xsCount; i++) {
       const xs: string = xss ? xss[i] : (result.xs as string);
-      if (xs.startsWith('urn:btpk:') && xs.length >= 73) {
-        result.publicKey = xs.slice(9, 73).toLowerCase();
+      const btpk = btpkPattern.exec(xs);
+      if (btpk) {
+        result.publicKey = btpk[1].toLowerCase();
       }
     }
   }
@@ -177,7 +189,7 @@ export function magnetDecode(uri: string): MagnetData {
   if (typeof result.tr === 'string') {
     result.announce = [result.tr];
   } else if (Array.isArray(result.tr)) {
-    result.announce = result.tr;
+    result.announce = [...result.tr];
   } else {
     result.announce = [];
   }
@@ -221,7 +233,7 @@ export function magnetDecode(uri: string): MagnetData {
 function parseQueryParamValue(key: string, val: string): string | number | string[] | number[] {
   // Clean up torrent name
   if (key === 'dn') {
-    return decodeURIComponent(val).replaceAll('+', ' ');
+    return decodeURIComponent(val.replaceAll('+', ' '));
   }
 
   // Address tracker (tr), exact source (xs), and acceptable source (as) are encoded
@@ -232,7 +244,12 @@ function parseQueryParamValue(key: string, val: string): string | number | strin
 
   // Return keywords as an array
   if (key === 'kt') {
-    return decodeURIComponent(val).split('+');
+    const keywords = val.split('+');
+    for (let i = 0; i < keywords.length; i++) {
+      keywords[i] = decodeURIComponent(keywords[i]);
+    }
+
+    return keywords;
   }
 
   // bep53
@@ -251,8 +268,7 @@ function parseQueryParamValue(key: string, val: string): string | number | strin
 export function magnetEncode(data: MagnetData): string {
   const obj: any = { ...data }; // Shallow clone object
 
-  // Deduplicate xt by using a set
-  const xts = obj.xt ? new Set(Array.isArray(obj.xt) ? obj.xt : [obj.xt]) : new Set();
+  const xts = new Set<string>(obj.xt ? (Array.isArray(obj.xt) ? obj.xt : [obj.xt]) : []);
 
   if (obj.infoHashIntArray) {
     xts.add(`urn:btih:${uint8ArrayToHex(obj.infoHashIntArray)}`);
@@ -263,28 +279,23 @@ export function magnetEncode(data: MagnetData): string {
   }
 
   if (obj.infoHashV2IntArray) {
-    xts.add((obj.xt = `urn:btmh:1220${uint8ArrayToHex(obj.infoHashV2IntArray)}`));
+    xts.add(`urn:btmh:1220${uint8ArrayToHex(obj.infoHashV2IntArray)}`);
   }
 
   if (obj.infoHashV2) {
     xts.add(`urn:btmh:1220${obj.infoHashV2}`);
   }
 
-  const xtsDeduped = [...xts];
-  if (xtsDeduped.length === 1) {
-    obj.xt = xtsDeduped[0];
+  if (xts.size === 1) {
+    obj.xt = xts.values().next().value;
   }
 
-  if (xtsDeduped.length > 1) {
-    obj.xt = xtsDeduped;
+  if (xts.size > 1) {
+    obj.xt = [...xts];
   }
 
   // Support using convenience names, in addition to spec names
   // (example: `infoHash` for `xt`, `name` for `dn`)
-  if (obj.infoHash) {
-    obj.xt = `urn:btih:${obj.infoHash as string}`;
-  }
-
   if (obj.publicKeyIntArray) {
     obj.xs = `urn:btpk:${uint8ArrayToHex(obj.publicKeyIntArray)}`;
   }
@@ -323,44 +334,59 @@ export function magnetEncode(data: MagnetData): string {
     }
 
     const raw = obj[key];
-    const values = Array.isArray(raw) ? raw : [raw];
 
     if (key === 'so') {
       if (paramIdx > 0) {
         acc += '&';
       }
 
-      acc += `${key}=${bep53Range.composeRange(values)}`;
+      acc += `${key}=${bep53Range.composeRange(Array.isArray(raw) ? raw : [raw])}`;
       paramIdx++;
       continue;
     }
 
-    for (let j = 0; j < values.length; j++) {
-      let val: string = values[j];
+    if (Array.isArray(raw)) {
+      for (let j = 0; j < raw.length; j++) {
+        const val = encodeParamValue(key, raw[j]);
 
-      if (key === 'dn') {
-        val = encodeURIComponent(val).replaceAll('%20', '+');
-      } else if (key === 'tr' || key === 'as' || key === 'ws') {
-        val = encodeURIComponent(val);
-      } else if (key === 'xs' && !val.startsWith('urn:btpk:')) {
-        val = encodeURIComponent(val);
-      } else if (key === 'kt') {
-        val = encodeURIComponent(val);
-      }
+        if (key === 'kt' && j > 0) {
+          acc += `+${val}`;
+        } else {
+          if (paramIdx > 0 || j > 0) {
+            acc += '&';
+          }
 
-      if (key === 'kt' && j > 0) {
-        acc += `+${val}`;
-      } else {
-        if (paramIdx > 0 || j > 0) {
-          acc += '&';
+          acc += `${key}=${val}`;
         }
-
-        acc += `${key}=${val}`;
       }
+    } else {
+      const val = encodeParamValue(key, raw);
+
+      if (paramIdx > 0) {
+        acc += '&';
+      }
+
+      acc += `${key}=${val}`;
     }
 
     paramIdx++;
   }
 
   return acc;
+}
+
+function encodeParamValue(key: string, val: string) {
+  if (key === 'dn') {
+    return encodeURIComponent(val).replaceAll('%20', '+');
+  }
+
+  if (key === 'tr' || key === 'as' || key === 'ws' || key === 'kt') {
+    return encodeURIComponent(val);
+  }
+
+  if (key === 'xs' && !val.startsWith('urn:btpk:')) {
+    return encodeURIComponent(val);
+  }
+
+  return val;
 }
