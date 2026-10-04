@@ -2,6 +2,7 @@
   "extends": "@sindresorhus/tsconfig",
   "compilerOptions": {
     "lib": ["ES2021", "DOM"],
+    "rootDir": ".",
     "outDir": "dist",
     "noUncheckedIndexedAccess": false,
     "noImplicitReturns": false
