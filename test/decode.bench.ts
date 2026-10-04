@@ -1,4 +1,4 @@
-import { bench, describe } from 'vitest';
+import { test } from 'vitest';
 
 import { magnetDecode, magnetEncode } from '../src/index.js';
 
@@ -11,33 +11,33 @@ const complicated =
 const hybrid =
   'magnet:?xt=urn:btih:631a31dd0a46257d5078c0dee4e66e26f73e42ac&xt=urn:btmh:1220d8dd32ac93357c368556af3ac1d95c9d76bd0dff6fa9833ecdac3d53134efabb&dn=bittorrent-v1-v2-hybrid-test';
 
-describe('magnetDecode', () => {
-  bench('simple magnet link', () => {
-    magnetDecode(leavesOfGrass);
-  });
-
-  bench('complicated magnet link', () => {
-    magnetDecode(complicated);
-  });
-
-  bench('hybrid v2 magnet link', () => {
-    magnetDecode(hybrid);
-  });
-
-  bench('empty magnet link', () => {
-    magnetDecode('magnet:?');
-  });
+test('magnetDecode', async ({ bench }) => {
+  await bench.compare(
+    bench('simple magnet link', () => {
+      magnetDecode(leavesOfGrass);
+    }),
+    bench('complicated magnet link', () => {
+      magnetDecode(complicated);
+    }),
+    bench('hybrid v2 magnet link', () => {
+      magnetDecode(hybrid);
+    }),
+    bench('empty magnet link', () => {
+      magnetDecode('magnet:?');
+    }),
+  );
 });
 
-describe('magnetEncode', () => {
+test('magnetEncode', async ({ bench }) => {
   const decoded = magnetDecode(leavesOfGrass);
   const decodedComplicated = magnetDecode(complicated);
 
-  bench('simple magnet link', () => {
-    magnetEncode(decoded);
-  });
-
-  bench('complicated magnet link', () => {
-    magnetEncode(decodedComplicated);
-  });
+  await bench.compare(
+    bench('simple magnet link', () => {
+      magnetEncode(decoded);
+    }),
+    bench('complicated magnet link', () => {
+      magnetEncode(decodedComplicated);
+    }),
+  );
 });

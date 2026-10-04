@@ -103,7 +103,7 @@ export function magnetDecode(uri: string): MagnetData {
   // keys like `__proto__` and `toString` are parsed as data, not prototype
   // accessors/inherited properties. Use own-key checks if this changes.
   const result: Partial<MagnetData> = Object.create(null);
-  for (let paramStart = queryStart; paramStart < uri.length; ) {
+  for (let paramStart = queryStart; paramStart < uri.length;) {
     const ampIdx = uri.indexOf('&', paramStart);
     const paramEnd = ampIdx === -1 ? uri.length : ampIdx;
     const eqIdx = uri.indexOf('=', paramStart);
